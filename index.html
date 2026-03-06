@@ -37,6 +37,9 @@ const CATEGORIES=[
   {id:"perks",label:"Discounts & Perks",icon:"🎟️",color:"#FF9F43",bg:"linear-gradient(135deg,#FF9F43,#ee8a2e)",desc:"Savings, free admission & deals"},
   {id:"national",label:"National Resources",icon:"🇺🇸",color:"#FC5C65",bg:"linear-gradient(135deg,#FC5C65,#eb3b5a)",desc:"Nationwide organizations"},
   {id:"events_act",label:"Events & Activities",icon:"📅",color:"#2BCBBA",bg:"linear-gradient(135deg,#2BCBBA,#0fb9a8)",desc:"Upcoming events & org calendars"},
+  {id:"childcare",label:"Childcare & Respite",icon:"👶",color:"#45AAF2",bg:"linear-gradient(135deg,#45AAF2,#2d98da)",desc:"Daycare, respite & after-school"},
+  {id:"financial",label:"Food & Financial Aid",icon:"💰",color:"#FD9644",bg:"linear-gradient(135deg,#FD9644,#e88832)",desc:"WIC, SNAP, stipends & assistance"},
+  {id:"housing",label:"Housing & Aging Out",icon:"🏠",color:"#778CA3",bg:"linear-gradient(135deg,#778CA3,#636e72)",desc:"Housing, transition & independence"},
 ];
 
 const COOK_COLLAR=["cook","dupage","lake","will","kane","mchenry"];
@@ -210,6 +213,77 @@ const R=[
   {id:426,c:"events_act",n:"IL Foster Closet — Quarterly Drives",d:"Quarterly large-scale distribution events with free clothing, shoes, toys, blankets, and essentials for foster children statewide.",p:null,u:"https://www.ilfostercloset.com",r:"Statewide",co:["statewide"]},
   {id:427,c:"events_act",n:"BookIt! Summer Reading Program",d:"Kids earn free Pizza Hut personal pan pizzas for completing reading goals. Libraries across Illinois participate every summer.",p:null,u:"https://www.bookitprogram.com",r:"Nationwide",co:["statewide"]},
   {id:428,c:"events_act",n:"Adoptive Families Today — Gatherings",d:"Quarterly meetups with featured speakers, breakout discussions, resource tables, and refreshments for all adoptive and foster families.",p:null,u:"https://adoptuskids.org",r:"Palatine / Statewide",co:["statewide"]},
+
+  // ─── CHILDCARE & RESPITE ───
+  {id:500,c:"childcare",n:"CCAP — Child Care Assistance (Free)",d:"Foster parents get free childcare through CCAP with NO copay. Contact your caseworker to apply. Covers ages 0–12 (special needs to 18).",p:"877-202-4453",u:"https://getchildcareil.org",r:"Statewide",co:["statewide"]},
+  {id:501,c:"childcare",n:"Illinois Cares for Kids",d:"Find quality childcare providers near you who accept CCAP. Search by zip code, filter by hours, type, and ratings.",p:null,u:"https://www.illinoiscaresforkids.org",r:"Statewide",co:["statewide"]},
+  {id:502,c:"childcare",n:"DCFS Respite Care",d:"Short-term relief for foster parents. Request respite hours through your caseworker — someone else cares for your foster child while you recharge.",p:"866-368-5204",u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
+  {id:503,c:"childcare",n:"Illinois Respite Coalition",d:"Emergency respite funding for caregivers of children with special needs. Click your county on their map for local respite providers.",p:null,u:"http://www.illinoisrespite.org",r:"Statewide",co:["statewide"]},
+  {id:504,c:"childcare",n:"DCFS After-School & Extracurricular Funding",d:"DCFS funds daycare, after-school programs, sports, art, and extracurriculars for eligible youth in care. Ask your caseworker.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
+  {id:505,c:"childcare",n:"Enrichment Funds (Specialized Foster Care)",d:"Extra funds for camp, sporting equipment, clubs, school activities, and trips beyond what the monthly board payment covers.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:506,c:"childcare",n:"Child Care Resource & Referral (CCR&R)",d:"16 regional agencies across Illinois help you find quality childcare, navigate CCAP, and access local family resources.",p:"877-202-4453",u:"https://www.inccrra.org",r:"Statewide",co:["statewide"]},
+  {id:507,c:"childcare",n:"ASAP Respite Services",d:"Adoption Support & Preservation program offers respite care for adoptive families. Part of the up to $500/year cash benefit.",p:null,u:"https://pathbeyondadoption.illinois.gov/resources.html",r:"Statewide",co:["statewide"]},
+
+  // ─── FOOD & FINANCIAL AID ───
+  {id:600,c:"financial",n:"DCFS Monthly Board Payment",d:"Monthly stipend for every foster child covering food, clothing, shelter, and allowance. Amount varies by child's age and care level.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
+  {id:601,c:"financial",n:"WIC — Women, Infants & Children",d:"Free healthy food (milk, eggs, produce, cereal) for foster children under 5. Foster parents can apply on behalf of the child. EBT card provided.",p:null,u:"https://www.dhs.state.il.us/page.aspx?item=30513",r:"Statewide",co:["statewide"]},
+  {id:602,c:"financial",n:"SNAP / Illinois LINK Card",d:"Supplemental food assistance for eligible families. Foster children's needs may qualify. Also unlocks museum discounts and other perks.",p:null,u:"https://abe.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:603,c:"financial",n:"YouthCare / Medicaid for Youth in Care",d:"Full medical, dental, and mental health coverage for every child in DCFS care. No cost to foster parents.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:604,c:"financial",n:"DCFS Nonrecurring Expense Funds",d:"Reimbursement for one-time costs like furniture, special equipment, or supplies not covered by the monthly board payment.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:605,c:"financial",n:"Adoption & Guardianship Subsidies",d:"Monthly subsidy continues after adoption or guardianship is finalized. May continue to age 21. Legal costs are fully covered by DCFS.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:606,c:"financial",n:"Education Training Vouchers (ETV)",d:"Federal program providing up to $5,000/year for post-secondary education and training for current and former foster youth.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:607,c:"financial",n:"TANF — Temporary Assistance",d:"Cash assistance for low-income families. May be available to relative caregivers. Apply through DHS.",p:null,u:"https://www.dhs.state.il.us/page.aspx?item=30358",r:"Statewide",co:["statewide"]},
+  {id:608,c:"financial",n:"Feeding Illinois — Food Pantries",d:"Network of food banks and pantries across all 102 counties. Find your nearest location for free groceries.",p:null,u:"https://feedingillinois.org/get-help/",r:"Statewide",co:["statewide"]},
+  {id:609,c:"financial",n:"Greater Chicago Food Depository",d:"Largest food bank in Chicagoland. Find pantries, soup kitchens, and mobile markets across Cook County.",p:"773-247-3663",u:"https://www.chicagosfoodbank.org/find-food/",r:"Cook County",co:["cook"]},
+  {id:610,c:"financial",n:"Special Service Fees",d:"DCFS can approve extra funds for phone bills, transportation, tutoring, and other services. Ask your caseworker about eligibility.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+
+  // ─── HOUSING & AGING OUT ───
+  {id:700,c:"housing",n:"Youth Housing Assistance Program",d:"Housing advocacy, emergency funding, and transition support for youth aging out of foster care at 18–21.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:701,c:"housing",n:"DCFS Extended Foster Care (18–21)",d:"Youth can remain in care until age 21 if enrolled in school, working, or have a medical condition. Includes housing, stipend, and services.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:702,c:"housing",n:"Transitional Living Programs (TLP)",d:"Supervised housing and life skills for youth 17–21 aging out of care. Learn budgeting, cooking, job skills, and independent living.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:703,c:"housing",n:"FosterClub — Transition Toolkit",d:"Free online tools, checklists, and guides for youth preparing to age out of foster care. Covers housing, finances, health, and more.",p:null,u:"https://www.fosterclub.com/resources",r:"Nationwide",co:["statewide"]},
+  {id:704,c:"housing",n:"iFoster Tech Program — Free Devices",d:"Free smartphones with unlimited data via Federal Lifeline program, plus laptops for college-bound foster youth.",p:null,u:"https://www.ifoster.org",r:"Nationwide",co:["statewide"]},
+  {id:705,c:"housing",n:"Emergency Resource Homes (ERH)",d:"DCFS program: licensed foster parents who accept emergency placements for up to 10 days while permanent homes are found.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare.html",r:"Statewide",co:["statewide"]},
+  {id:706,c:"housing",n:"Midwest Shelter for Homeless Veterans",d:"Housing for former foster youth who are veterans or at risk of homelessness. Wheaton, IL.",p:"630-871-8387",u:null,r:"DuPage County",co:["dupage"]},
+
+  // ─── ADDITIONAL SUPPORT & HEALTH (filling gaps) ───
+  {id:800,c:"support",n:"Allendale Association — Specialized Foster Care",d:"Specialized foster care for children with behavioral/emotional needs. Monthly stipend, enrichment funds, respite, nurse on staff, and training dinners with childcare.",p:null,u:"https://allendale4kids.org/programs-services/community-services/foster-care/",r:"Chicagoland",co:COOK_COLLAR},
+  {id:801,c:"support",n:"Volunteers of America Illinois",d:"Foster care, reunification services, counseling, parent training, crisis intervention, and respite care across Chicago.",p:"312-564-2400",u:"https://www.voaillinois.org/services/child-welfare-services/",r:"Chicago",co:["cook"]},
+  {id:802,c:"support",n:"Center for Youth & Family Solutions",d:"Foster care, counseling, and family support services across Central Illinois. Multiple office locations.",p:null,u:"https://www.cyfsolutions.org",r:"Central IL",co:["peoria","tazewell","woodford","fulton","knox","mclean","mason","logan","marshall","stark"]},
+  {id:803,c:"support",n:"Cunningham Children's Home",d:"Therapeutic foster care, residential treatment, and family services for Central Illinois youth.",p:null,u:"https://www.cunninghamhome.org",r:"Champaign & Central IL",co:["champaign","vermilion","mclean","macon","piatt","ford","douglas","coles"]},
+  {id:804,c:"health",n:"DCFS YouthCare Medical Card",d:"Every child in DCFS care receives a medical card covering doctor visits, prescriptions, dental, vision, therapy, and hospitalization at no cost.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:805,c:"health",n:"Illinois Poison Center",d:"24/7 poison emergency hotline. Free, confidential. Important for foster parents of toddlers and young children.",p:"1-800-222-1222",u:"https://illinoispoisoncenter.org",r:"Statewide",co:["statewide"]},
+  {id:806,c:"health",n:"Crisis Text Line",d:"Text HOME to 741741 for free 24/7 crisis support via text. Good for older foster youth who prefer texting over calling.",p:null,u:"https://www.crisistextline.org",r:"Nationwide",co:["statewide"]},
+  {id:807,c:"health",n:"NAMI Illinois — Mental Health",d:"National Alliance on Mental Illness Illinois chapter. Free support groups, education programs, and crisis resources for families.",p:null,u:"https://namiillinois.org",r:"Statewide",co:["statewide"]},
+
+  // ─── ADDITIONAL LEGAL ───
+  {id:808,c:"legal",n:"Equip for Equality",d:"Legal advocacy for people with disabilities including foster children with special needs. Free protection and advocacy services.",p:"800-537-2632",u:"https://www.equipforequality.org",r:"Statewide",co:["statewide"]},
+  {id:809,c:"legal",n:"Prairie State Legal Services",d:"Free legal aid for low-income families in Northern and Central Illinois. Family law, benefits, housing, and education rights.",p:null,u:"https://www.pslegal.org",r:"Northern & Central IL",co:["winnebago","boone","carroll","dekalb","jo_daviess","kane","kendall","lee","mchenry","ogle","stephenson","whiteside","bureau","grundy","lasalle","livingston","marshall","putnam","woodford"]},
+
+  // ─── ADDITIONAL EDUCATION ───
+  {id:810,c:"education",n:"Head Start / Early Head Start",d:"Free comprehensive early childhood education for children 0–5 from low-income families including foster families. Available in every county.",p:null,u:"https://eclkc.ohs.acf.hhs.gov/hslc/HeadStartOffices",r:"Statewide",co:["statewide"]},
+  {id:811,c:"education",n:"Illinois Birth to Three Program",d:"Free early intervention services for infants and toddlers with developmental delays. Referrals through your pediatrician or caseworker.",p:"800-323-4769",u:null,r:"Statewide",co:["statewide"]},
+  {id:812,c:"education",n:"Education Training Vouchers (ETV)",d:"Up to $5,000/year for post-secondary education for current and former foster youth ages 16–23.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+
+  // ─── ADDITIONAL DONATIONS ───
+  {id:813,c:"donations",n:"Cradles to Crayons Chicago",d:"Free clothing, shoes, school supplies, and essentials for children in need. Serves foster families through agency referrals.",p:null,u:"https://www.cradlestocrayons.org/chicago/",r:"Chicagoland",co:COOK_COLLAR},
+  {id:814,c:"donations",n:"Share Our Spare",d:"Connects families who have outgrown baby gear with families who need it. Car seats, strollers, cribs, and more — all free.",p:null,u:"https://www.shareourspare.org",r:"Chicagoland",co:COOK_COLLAR},
+
+  // ─── ADDITIONAL NATIONAL ───
+  {id:815,c:"national",n:"Donaldson Adoption Institute",d:"Research, education, and resources to improve adoption practice and policy nationwide.",p:null,u:"https://www.adoptioninstitute.org",r:"Nationwide",co:["statewide"]},
+  {id:816,c:"national",n:"National Kinship Alliance",d:"Resources, advocacy, and support specifically for kinship caregivers — grandparents, aunts, uncles, and family members raising children.",p:null,u:"https://www.grandfamilies.org",r:"Nationwide",co:["statewide"]},
+  {id:817,c:"national",n:"Jockey Being Family",d:"Post-adoption support including a free helpline, webinars, and connection to local resources for adoptive families.",p:"888-200-4005",u:"https://www.jockeybeingfamily.org",r:"Nationwide",co:["statewide"]},
+
+  // ─── ADDITIONAL PERKS ───
+  {id:818,c:"perks",n:"Cantigny Park — Free Admission",d:"Always free admission to Cantigny Park in Wheaton. Free on first Wednesday of month. Military and LINK card discounts available.",p:null,u:"https://www.cantigny.org",r:"DuPage County",co:["dupage"]},
+  {id:819,c:"perks",n:"Klehm Arboretum — EBT Discount",d:"Discounted admission for EBT/WIC families. 150+ acres of accessible paths, gardens, and nature walks in Rockford.",p:null,u:"https://klehm.org",r:"Winnebago County",co:["winnebago"]},
+  {id:820,c:"perks",n:"Brookfield Zoo — Discounted Days",d:"Reduced or free admission on select days for Illinois residents. LINK card holders get special pricing year-round.",p:null,u:"https://www.czs.org/Brookfield-Zoo",r:"Cook County",co:["cook"]},
+  {id:821,c:"perks",n:"Peoria PlayHouse Children's Museum",d:"Discounted admission for LINK/EBT card holders. Interactive exhibits designed for children birth through age 10.",p:null,u:"https://www.peoriaplayhouse.org",r:"Peoria County",co:["peoria"]},
+  {id:822,c:"perks",n:"Batavia Depot Museum — Free",d:"Always free! History exhibits from 10,000 BC to today's rocket scientists. Great family outing in Kane County.",p:null,u:null,r:"Kane County",co:["kane"]},
+
+  // ─── ADDITIONAL FAITH ───
+  {id:823,c:"faith",n:"Lifeline Children's Services",d:"National Christian adoption and foster care agency with Illinois offices. Provides training, home studies, and wraparound church engagement programs.",p:null,u:"https://lifelinechild.org",r:"Nationwide",co:["statewide"]},
+  {id:824,c:"faith",n:"Bethany Christian Services",d:"One of the largest adoption and foster care agencies in the US. Provides foster parent training, support groups, counseling, and refugee services.",p:null,u:"https://bethany.org",r:"Nationwide",co:["statewide"]},
 ];
 
 
