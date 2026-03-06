@@ -9,6 +9,7 @@
   <title>Foster Family Hub — Illinois Resources</title>
   <meta name="description" content="Find foster family resources across all 102 Illinois counties. Donations, support groups, legal help, DCFS services, education, health, faith communities, discounts, events and national resources.">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏡</text></svg>">
+  <link rel="manifest" href="manifest.json">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #FFFBF5; font-family: sans-serif; }
@@ -515,6 +516,47 @@ function App(){
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(React.createElement(App));
+  </script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('sw.js').then(function(registration) {
+          console.log('SW registered, scope:', registration.scope);
+
+          // Check for updates immediately on load
+          registration.update();
+
+          // Check for updates every 60 seconds while the app is open
+          setInterval(function() {
+            registration.update();
+          }, 60000);
+
+          // When a new service worker is found and installed, prompt refresh
+          registration.addEventListener('updatefound', function() {
+            var newWorker = registration.installing;
+            newWorker.addEventListener('statechange', function() {
+              if (newWorker.state === 'activated') {
+                // New version available — auto-refresh
+                window.location.reload();
+              }
+            });
+          });
+        }).catch(function(err) {
+          console.log('SW registration failed:', err);
+        });
+
+        // If a new SW takes over, refresh the page
+        var refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', function() {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
+      });
+    }
   </script>
 </body>
 </html>
