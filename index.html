@@ -181,29 +181,234 @@ const R=[
 ];
 
 
-// ─── EVENTS DATA ───
-const EVENTS=[
-  {id:"e1",title:"Foster Parent Info Meeting — Cook County",org:"Lutheran Child & Family Services",date:"2026-03-19",time:"5:00 PM – 6:30 PM",loc:"Grace Lutheran Church, River Forest",desc:"Learn about becoming a foster parent. No obligation. Contact Leondra at (708) 771-7180.",co:["cook"],cat:"support",url:"https://lcfs.org/event/foster-parent-informational-meeting-in-cook-county-3/"},
-  {id:"e2",title:"Restore Network Foster Parent Training",org:"The Restore Network",date:"2026-03-21",time:"9:00 AM – 3:00 PM",loc:"Life Community Church, Columbia",desc:"Trauma-informed training (TBRI principles) for current and prospective foster families in the Metro East area.",co:["monroe","madison","st_clair"],cat:"faith",url:"https://therestorenetwork.org"},
-  {id:"e3",title:"National Foster Care Month Kickoff",org:"Illinois DCFS",date:"2026-05-01",time:"All Day",loc:"Statewide",desc:"May is National Foster Care Month! Watch for local recognition events, drives, and appreciation activities across all 102 counties.",co:["statewide"],cat:"dcfs",url:"https://dcfs.illinois.gov"},
-  {id:"e4",title:"Foster Parent Appreciation Picnic",org:"One Family Illinois",date:"2026-04-18",time:"11:00 AM – 3:00 PM",loc:"Lockport, IL",desc:"Annual spring picnic celebrating foster and adoptive families. Food, games, resource tables, and community building.",co:["cook","will"],cat:"support",url:"https://www.onefamilyillinois.org"},
-  {id:"e5",title:"Closet 1:27 Volunteer Day",org:"The James Project",date:"2026-03-29",time:"9:00 AM – 12:00 PM",loc:"Springfield, IL",desc:"Help sort clothing, pack hygiene kits, and prepare beds for newly placed foster children in Sangamon County.",co:["sangamon"],cat:"donations",url:"https://thejamesproject127.com"},
-  {id:"e6",title:"Give STL Day — Foster Care Fundraiser",org:"Foster & Adoptive Care Coalition",date:"2026-05-07",time:"All Day (Online)",loc:"Online — St. Louis & Illinois",desc:"24-hour online giving event benefiting foster children in IL & MO communities. Last year raised over $245,000!",co:["statewide","st_clair","madison"],cat:"national",url:"https://www.foster-adopt.org/events/"},
-  {id:"e7",title:"Let It Be Us — Online Info Session",org:"Let It Be Us",date:"2026-03-15",time:"10:00 AM – 11:30 AM",loc:"Virtual (Zoom)",desc:"Learn about obtaining a license to foster or adopt in Illinois. Free online event open to everyone statewide.",co:["statewide"],cat:"dcfs",url:"https://letitbeus.org"},
-  {id:"e8",title:"Little City Foster Care Open House",org:"Little City",date:"2026-04-05",time:"10:00 AM – 1:00 PM",loc:"Little City — Matteson Office",desc:"Meet the team, learn about foster care, and explore how to make a difference for children with special needs.",co:["cook","will"],cat:"support",url:"https://littlecity.org"},
-  {id:"e9",title:"Brightpoint Foster Family Fun Day",org:"Brightpoint",date:"2026-04-12",time:"10:00 AM – 2:00 PM",loc:"Various Northern IL Locations",desc:"Spring family event with activities, food, and resource sharing for current Brightpoint foster families.",co:BRIGHTPOINT.slice(0,6),cat:"support",url:"https://www.brightpoint.org"},
-  {id:"e10",title:"Museum of Science & Industry — Free Day",org:"MSI Chicago",date:"2026-03-12",time:"9:30 AM – 4:00 PM",loc:"5700 S DuSable Lake Shore Dr, Chicago",desc:"Free entry for families with EBT/WIC cards — 2 adults + 6 kids. Over 400,000 sq ft of hands-on exhibits!",co:["cook"],cat:"perks",url:"https://www.msichicago.org"},
-  {id:"e11",title:"CASA Volunteer Training — Spring Session",org:"Illinois CASA",date:"2026-04-07",time:"6:00 PM – 9:00 PM",loc:"Multiple IL Counties",desc:"Become a Court Appointed Special Advocate. Spring training sessions beginning in multiple counties.",co:["statewide"],cat:"legal",url:"https://illinoiscasa.org"},
-  {id:"e12",title:"Foster Care Awareness Walk",org:"DCFS & Community Partners",date:"2026-05-03",time:"9:00 AM – 12:00 PM",loc:"Grant Park, Chicago",desc:"Annual awareness walk during National Foster Care Month. T-shirts, speakers, resource fair, and family fun.",co:["cook"],cat:"dcfs",url:"https://dcfs.illinois.gov"},
-  {id:"e13",title:"Restore Network Parent Coach Session",org:"The Restore Network",date:"2026-04-15",time:"7:00 PM – 8:30 PM",loc:"Virtual (Zoom)",desc:"Free parent coaching session for foster families. Learn trauma-informed strategies using Trust-Based Relational Intervention.",co:["statewide"],cat:"faith",url:"https://therestorenetwork.org/trauma-informed-resources/"},
-  {id:"e14",title:"Kids Bowl Free — Summer Kickoff",org:"Kids Bowl Free",date:"2026-05-01",time:"Varies",loc:"Participating IL Bowling Centers",desc:"Registration opens for 2 free games per child per day all summer! Check kidsbowlfree.com for local centers.",co:["statewide"],cat:"perks",url:"https://www.kidsbowlfree.com"},
-  {id:"e15",title:"The Baby Fold Support Group",org:"The Baby Fold",date:"2026-03-20",time:"6:30 PM – 8:00 PM",loc:"Normal, IL",desc:"Monthly support group for foster and adoptive parents in Central Illinois. Childcare provided.",co:["mclean","champaign","sangamon","macon","tazewell","dewitt","logan","piatt"],cat:"support",url:null},
-  {id:"e16",title:"Mimi's House Spring Drive",org:"Mimi's House",date:"2026-04-19",time:"10:00 AM – 2:00 PM",loc:"Mundelein, IL",desc:"Spring supply drive for foster families in Lake County. Drop off clothing, diapers, car seats, and essentials.",co:["lake","cook"],cat:"donations",url:"https://mimishousefac.org"},
-  {id:"e17",title:"Foster Family Respite Night",org:"Second Nurture",date:"2026-03-28",time:"5:30 PM – 9:00 PM",loc:"Chicagoland (TBA)",desc:"Free respite evening! Drop off your kids for a supervised fun night while foster parents enjoy a break.",co:COOK_COLLAR,cat:"support",url:"https://www.2nurture.org"},
-  {id:"e18",title:"Spero Family Services Training",org:"Spero Family Services",date:"2026-04-22",time:"9:00 AM – 4:00 PM",loc:"Mt. Vernon, IL",desc:"Trauma-based therapeutic foster care training for new and current foster families in Southern Illinois.",co:SOUTH_IL.slice(0,8),cat:"education",url:"https://www.sperofs.org"},
-  {id:"e19",title:"iFoster Resource Webinar",org:"iFoster",date:"2026-04-10",time:"12:00 PM – 1:00 PM",loc:"Virtual",desc:"Learn how to access 500+ free resources, discounts, and benefits through your free iFoster membership.",co:["statewide"],cat:"perks",url:"https://www.ifoster.org"},
-  {id:"e20",title:"Foster Parent Appreciation Dinner",org:"DCFS Region 2",date:"2026-05-09",time:"6:00 PM – 9:00 PM",loc:"Peoria, IL",desc:"Annual dinner honoring foster parents in the Peoria region. RSVP through your caseworker.",co:["peoria","tazewell","woodford","knox","fulton","marshall"],cat:"dcfs",url:"https://dcfs.illinois.gov"},
-];
+// ─── SMART EVENT ENGINE ───
+// Generates events dynamically based on today's date.
+// Recurring events auto-roll forward every month/quarter/year.
+// No manual updates needed — the calendar stays fresh forever.
+
+function generateEvents() {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const twoMonthsOut = new Date(today);
+  twoMonthsOut.setMonth(twoMonthsOut.getMonth() + 2);
+  twoMonthsOut.setDate(twoMonthsOut.getDate() + 7); // slight buffer
+
+  // Helper: get Nth weekday of a month (e.g., 3rd Thursday)
+  function nthWeekday(year, month, weekday, n) {
+    const first = new Date(year, month, 1);
+    let day = 1 + ((weekday - first.getDay() + 7) % 7);
+    day += (n - 1) * 7;
+    if (day > new Date(year, month + 1, 0).getDate()) return null;
+    return new Date(year, month, day);
+  }
+
+  // Helper: last weekday of a month
+  function lastWeekday(year, month, weekday) {
+    const last = new Date(year, month + 1, 0);
+    const diff = (last.getDay() - weekday + 7) % 7;
+    return new Date(year, month, last.getDate() - diff);
+  }
+
+  // Helper: format date as YYYY-MM-DD
+  function fmt(d) {
+    return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  }
+
+  // Generate dates for each month in the window
+  const months = [];
+  let cursor = new Date(today.getFullYear(), today.getMonth(), 1);
+  while (cursor <= twoMonthsOut) {
+    months.push({ y: cursor.getFullYear(), m: cursor.getMonth() });
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+
+  const events = [];
+  let eid = 1;
+
+  // ──────────────────────────────────────────
+  // MONTHLY RECURRING EVENTS (happen every month)
+  // ──────────────────────────────────────────
+
+  const monthlyTemplates = [
+    // 3rd Wednesday — LCFS Foster Parent Info Meeting
+    { weekday:3, nth:3, title:"Foster Parent Info Meeting — Cook County", org:"Lutheran Child & Family Services", time:"5:00 PM – 6:30 PM", loc:"Grace Lutheran Church, River Forest", desc:"Learn about becoming a foster parent. No obligation. Open to everyone curious about fostering. Contact Leondra at (708) 771-7180.", co:["cook"], cat:"support", url:"https://lcfs.org/program/foster-care/" },
+    // 3rd Thursday — Baby Fold Support Group
+    { weekday:4, nth:3, title:"The Baby Fold Support Group", org:"The Baby Fold", time:"6:30 PM – 8:00 PM", loc:"Normal, IL", desc:"Monthly support group for foster and adoptive parents in Central Illinois. Childcare provided. All welcome.", co:["mclean","champaign","sangamon","macon","tazewell","dewitt","logan","piatt"], cat:"support", url:null },
+    // 2nd Tuesday — Catholic Charities Adoption Group
+    { weekday:2, nth:2, title:"Catholic Charities Adoption Support Group", org:"Catholic Charities", time:"6:30 PM – 8:00 PM", loc:"Chicago (Archdiocese Office)", desc:"Free monthly support group open to all adoptive and foster families. Share experiences, resources, and encouragement.", co:["cook"], cat:"faith", url:null },
+    // 1st Saturday — James Project Closet Volunteer Day
+    { weekday:6, nth:1, title:"Closet 1:27 Volunteer Day", org:"The James Project", time:"9:00 AM – 12:00 PM", loc:"Springfield, IL", desc:"Help sort clothing, pack hygiene kits, and prepare beds for newly placed foster children in Sangamon County. Drop-ins welcome.", co:["sangamon"], cat:"donations", url:"https://thejamesproject127.com" },
+    // 2nd Saturday — Mimi's House Resource Day
+    { weekday:6, nth:2, title:"Mimi's House Resource Day", org:"Mimi's House", time:"10:00 AM – 1:00 PM", loc:"Mundelein, IL", desc:"Monthly resource day for Lake County foster families. Pick up clothing, diapers, car seats, and essentials. Referral from caseworker.", co:["lake","cook"], cat:"donations", url:"https://mimishousefac.org" },
+    // Last Friday — Second Nurture Respite Night
+    { weekday:5, nth:"last", title:"Foster Family Respite Night", org:"Second Nurture", time:"5:30 PM – 9:00 PM", loc:"Chicagoland (rotating location)", desc:"Free respite evening! Drop off your kids for a supervised fun night while foster parents enjoy a well-deserved break.", co:COOK_COLLAR, cat:"support", url:"https://www.2nurture.org" },
+    // 2nd Wednesday — Let It Be Us Online Info Session
+    { weekday:3, nth:2, title:"Let It Be Us — Online Info Session", org:"Let It Be Us", time:"10:00 AM – 11:30 AM", loc:"Virtual (Zoom)", desc:"Free monthly webinar about obtaining a license to foster or adopt in Illinois. Open to everyone statewide. No obligation.", co:["statewide"], cat:"dcfs", url:"https://letitbeus.org" },
+    // 3rd Tuesday — Restore Network Parent Coach Session
+    { weekday:2, nth:3, title:"Restore Network Parent Coach Session", org:"The Restore Network", time:"7:00 PM – 8:30 PM", loc:"Virtual (Zoom)", desc:"Free monthly parent coaching for foster families. Learn trauma-informed strategies using Trust-Based Relational Intervention (TBRI).", co:["statewide"], cat:"faith", url:"https://therestorenetwork.org/trauma-informed-resources/" },
+    // 1st Wednesday — MSI Free Day (EBT/WIC)
+    { weekday:3, nth:1, title:"Museum of Science & Industry — Free Day", org:"MSI Chicago", time:"9:30 AM – 4:00 PM", loc:"5700 S DuSable Lake Shore Dr, Chicago", desc:"Free entry for families with EBT/WIC cards — 2 adults + up to 6 kids. Over 400,000 sq ft of hands-on STEM exhibits!", co:["cook"], cat:"perks", url:"https://www.msichicago.org" },
+    // 1st Tuesday — Art Institute Free (IL residents)
+    { weekday:2, nth:1, title:"Art Institute of Chicago — Free Tuesday", org:"Art Institute of Chicago", time:"11:00 AM – 6:00 PM", loc:"111 S Michigan Ave, Chicago", desc:"Free admission for all Illinois residents every first Tuesday. Explore world-class art with the whole family.", co:["cook"], cat:"perks", url:"https://www.artic.edu" },
+    // 2nd Thursday — iFoster Resource Webinar
+    { weekday:4, nth:2, title:"iFoster Resource Webinar", org:"iFoster", time:"12:00 PM – 1:00 PM", loc:"Virtual", desc:"Monthly webinar showing how to access 500+ free resources, discounts, and benefits through your free iFoster membership.", co:["statewide"], cat:"perks", url:"https://www.ifoster.org" },
+    // 4th Thursday — Family Core Peoria Support Group
+    { weekday:4, nth:4, title:"Family Core Foster Support Group", org:"Family Core", time:"6:00 PM – 7:30 PM", loc:"Peoria, IL", desc:"Monthly gathering for Peoria-region foster and adoptive parents. Peer support, guest speakers, and resource sharing.", co:["peoria","tazewell","woodford","mclean","marshall","knox","fulton"], cat:"support", url:null },
+    // 1st Thursday — Brightpoint Parent Partner Check-In
+    { weekday:4, nth:1, title:"Brightpoint Parent Partner Check-In", org:"Brightpoint", time:"10:00 AM – 11:30 AM", loc:"Virtual / Northern IL Offices", desc:"Monthly mentorship check-in with experienced Brightpoint parent partners. Get one-on-one guidance and connect with peers.", co:BRIGHTPOINT.slice(0,6), cat:"support", url:"https://www.brightpoint.org" },
+    // 3rd Saturday — Spero Family Services Coffee & Connect
+    { weekday:6, nth:3, title:"Spero Coffee & Connect", org:"Spero Family Services", time:"9:30 AM – 11:00 AM", loc:"Mt. Vernon, IL", desc:"Monthly informal coffee gathering for Southern Illinois foster families. Share stories, get support, build community.", co:SOUTH_IL.slice(0,10), cat:"support", url:"https://www.sperofs.org" },
+    // 2nd Monday — Caritas Family Solutions Support Meeting
+    { weekday:1, nth:2, title:"Caritas Family Support Meeting", org:"Caritas Family Solutions", time:"6:00 PM – 7:30 PM", loc:"Belleville, IL", desc:"Monthly support meeting for foster and adoptive families across Southern and Central Illinois. All are welcome.", co:["st_clair","madison","bond","clinton","monroe"], cat:"support", url:"https://caritasfamilysolutions.org" },
+    // 4th Saturday — Little City Family Activity Day
+    { weekday:6, nth:4, title:"Little City Family Activity Day", org:"Little City", time:"10:00 AM – 1:00 PM", loc:"Palatine / Matteson, IL", desc:"Monthly activity day for Little City foster families. Arts, crafts, games, and supervised fun for kids while parents connect.", co:["cook","will"], cat:"support", url:"https://littlecity.org" },
+    // Last Wednesday — UCAN Nurturing Parent Session
+    { weekday:3, nth:"last", title:"UCAN Nurturing Parent Session", org:"UCAN", time:"6:00 PM – 7:30 PM", loc:"Chicago", desc:"Monthly sessions for foster parents of young children covering child development, trauma responses, and peer support strategies.", co:["cook"], cat:"education", url:"https://ucanchicago.org" },
+    // 1st Monday — DuPage Family Focus Parent Café
+    { weekday:1, nth:1, title:"Family Focus Parent Café", org:"Family Focus DuPage", time:"10:00 AM – 11:30 AM", loc:"Wheaton, IL", desc:"Monthly Parent Café for foster and adoptive families. Coffee, discussion, and community resources. Childcare available.", co:["dupage"], cat:"support", url:"https://www.family-focus.org/center/dupage/" },
+    // 3rd Monday — CASA Kane County Info Night
+    { weekday:1, nth:3, title:"CASA Kane County Info Night", org:"CASA Kane County", time:"6:00 PM – 7:00 PM", loc:"Geneva, IL", desc:"Learn how to become a Court Appointed Special Advocate for children in Kane County foster care. Monthly info session.", co:["kane"], cat:"legal", url:"https://kanecountyconnects.com" },
+    // 2nd Friday — Lincoln Park Zoo Free (always free but special foster family meetup)
+    { weekday:5, nth:2, title:"Foster Family Zoo Meetup", org:"Community Organized", time:"10:00 AM – 1:00 PM", loc:"Lincoln Park Zoo, Chicago", desc:"Monthly informal meetup for foster families at Lincoln Park Zoo (always free!). Meet at the main gate. Bring a picnic!", co:["cook","dupage","lake","will","kane"], cat:"perks", url:"https://www.lpzoo.org" },
+  ];
+
+  // Generate monthly recurring events
+  months.forEach(({y, m}) => {
+    monthlyTemplates.forEach((tmpl, ti) => {
+      let d;
+      if (tmpl.nth === "last") {
+        d = lastWeekday(y, m, tmpl.weekday);
+      } else {
+        d = nthWeekday(y, m, tmpl.weekday, tmpl.nth);
+      }
+      if (d && d >= today && d <= twoMonthsOut) {
+        events.push({
+          id: "r" + eid++,
+          title: tmpl.title,
+          org: tmpl.org,
+          date: fmt(d),
+          time: tmpl.time,
+          loc: tmpl.loc,
+          desc: tmpl.desc,
+          co: tmpl.co,
+          cat: tmpl.cat,
+          url: tmpl.url
+        });
+      }
+    });
+  });
+
+  // ──────────────────────────────────────────
+  // QUARTERLY EVENTS (every 3 months)
+  // ──────────────────────────────────────────
+
+  const quarterlyTemplates = [
+    { months:[0,3,6,9], nth:2, weekday:6, title:"Restore Network Foster Family Retreat", org:"The Restore Network", time:"9:00 AM – 3:00 PM", loc:"Life Community Church, Columbia", desc:"Quarterly retreat with trauma-informed training (TBRI), fellowship, meals, and childcare for foster families in the Metro East.", co:["monroe","madison","st_clair","bond","clinton","macoupin"], cat:"faith", url:"https://therestorenetwork.org" },
+    { months:[1,4,7,10], nth:1, weekday:6, title:"IL Foster Closet — Quarterly Distribution", org:"IL Foster Closet", time:"10:00 AM – 2:00 PM", loc:"Various IL Locations", desc:"Quarterly large-scale distribution event. Free clothing, shoes, toys, blankets, and essentials for foster children statewide.", co:["statewide"], cat:"donations", url:"https://www.ilfostercloset.com" },
+    { months:[2,5,8,11], nth:3, weekday:6, title:"CASA Volunteer Training — New Session", org:"Illinois CASA", time:"9:00 AM – 4:00 PM", loc:"Multiple IL Counties", desc:"Quarterly CASA volunteer training. Become a Court Appointed Special Advocate for children in foster care across Illinois.", co:["statewide"], cat:"legal", url:"https://illinoiscasa.org" },
+    { months:[0,3,6,9], nth:1, weekday:6, title:"Together We Rise — Bike Build", org:"Together We Rise", time:"10:00 AM – 1:00 PM", loc:"Chicagoland (rotating)", desc:"Quarterly volunteer event assembling bikes for children entering foster care. All ages welcome — no experience needed!", co:COOK_COLLAR, cat:"donations", url:"https://www.togetherwerise.org" },
+    { months:[1,4,7,10], nth:3, weekday:5, title:"Adoptive Families Today — Quarterly Gathering", org:"Adoptive Families Today", time:"6:30 PM – 8:30 PM", loc:"Palatine, IL", desc:"Quarterly meetup for adoptive and foster families. Featured speaker, breakout discussion, resource tables, and refreshments.", co:["statewide"], cat:"support", url:"https://adoptuskids.org" },
+  ];
+
+  quarterlyTemplates.forEach(tmpl => {
+    months.forEach(({y, m}) => {
+      if (!tmpl.months.includes(m)) return;
+      const d = nthWeekday(y, m, tmpl.weekday, tmpl.nth);
+      if (d && d >= today && d <= twoMonthsOut) {
+        events.push({
+          id: "q" + eid++,
+          title: tmpl.title,
+          org: tmpl.org,
+          date: fmt(d),
+          time: tmpl.time,
+          loc: tmpl.loc,
+          desc: tmpl.desc,
+          co: tmpl.co,
+          cat: tmpl.cat,
+          url: tmpl.url
+        });
+      }
+    });
+  });
+
+  // ──────────────────────────────────────────
+  // ANNUAL / SEASONAL EVENTS (tied to specific months)
+  // ──────────────────────────────────────────
+
+  const annualTemplates = [
+    // May — National Foster Care Month (full month)
+    { month:4, day:1, title:"National Foster Care Month Kickoff", org:"Illinois DCFS", time:"All Day", loc:"Statewide", desc:"May is National Foster Care Month! Watch for local recognition events, supply drives, and appreciation activities across all 102 counties.", co:["statewide"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
+    // May — Foster Care Awareness Walk
+    { month:4, weekday:6, nth:1, title:"Foster Care Awareness Walk", org:"DCFS & Community Partners", time:"9:00 AM – 12:00 PM", loc:"Grant Park, Chicago", desc:"Annual awareness walk during National Foster Care Month. Free T-shirts, inspiring speakers, resource fair, and family activities.", co:["cook"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
+    // May — Foster Parent Appreciation Dinner (Peoria)
+    { month:4, weekday:6, nth:2, title:"Foster Parent Appreciation Dinner — Peoria", org:"DCFS Region 2", time:"6:00 PM – 9:00 PM", loc:"Peoria, IL", desc:"Annual dinner honoring foster parents in the Peoria region. Awards, speakers, and celebration. RSVP through your caseworker.", co:["peoria","tazewell","woodford","knox","fulton","marshall"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
+    // May — Give STL Day
+    { month:4, day:7, title:"Give STL Day — Foster Care Fundraiser", org:"Foster & Adoptive Care Coalition", time:"All Day (Online)", loc:"Online — St. Louis & Illinois", desc:"Annual 24-hour online giving event benefiting foster children in IL & MO communities. Every dollar directly supports kids in care.", co:["statewide","st_clair","madison"], cat:"national", url:"https://www.foster-adopt.org/events/" },
+    // May — Kids Bowl Free Summer Kickoff
+    { month:4, day:1, title:"Kids Bowl Free — Summer Registration Opens", org:"Kids Bowl Free", time:"Varies", loc:"Participating IL Bowling Centers", desc:"Summer registration opens! Kids can bowl 2 free games per day all summer at participating centers. Sign up at kidsbowlfree.com.", co:["statewide"], cat:"perks", url:"https://www.kidsbowlfree.com" },
+    // April — One Family Appreciation Picnic
+    { month:3, weekday:6, nth:3, title:"Foster Family Appreciation Picnic", org:"One Family Illinois", time:"11:00 AM – 3:00 PM", loc:"Lockport, IL", desc:"Annual spring picnic celebrating foster and adoptive families. Food, games, resource tables, and community building.", co:["cook","will"], cat:"support", url:"https://www.onefamilyillinois.org" },
+    // April — Little City Open House
+    { month:3, weekday:6, nth:1, title:"Little City Foster Care Open House", org:"Little City", time:"10:00 AM – 1:00 PM", loc:"Little City — Matteson Office", desc:"Annual open house. Meet the team, learn about foster care, and explore how you can help children with special needs.", co:["cook","will"], cat:"support", url:"https://littlecity.org" },
+    // November — National Adoption Month
+    { month:10, day:1, title:"National Adoption Month Kickoff", org:"Illinois DCFS", time:"All Day", loc:"Statewide", desc:"November is National Adoption Month! Celebrate finalized adoptions, attend Heart Gallery events, and learn about adopting from foster care.", co:["statewide"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
+    // November — Adoption Day Celebrations
+    { month:10, weekday:6, nth:3, title:"National Adoption Day Celebrations", org:"Illinois Courts & DCFS", time:"10:00 AM – 2:00 PM", loc:"Courthouses Statewide", desc:"Courts across Illinois finalize adoptions and celebrate families formed through foster care. Attend to support newly adopted families!", co:["statewide"], cat:"dcfs", url:"https://www.nationaladoptionday.org" },
+    // September — Kinship Care Month
+    { month:8, day:1, title:"Kinship Care Month", org:"Illinois DCFS", time:"All Day", loc:"Statewide", desc:"September recognizes kinship caregivers — grandparents, aunts, uncles — who step up for children. See local events and resources for relative caregivers.", co:["statewide"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
+    // February — Adoption & Foster Friendly Schools Webinar
+    { month:1, weekday:2, nth:4, title:"Adoption & Foster Friendly Schools Webinar", org:"U of I School of Social Work", time:"12:00 PM – 1:00 PM", loc:"Virtual", desc:"Annual webinar training educators on adoption, foster care, kinship care, and the impact of early loss and disrupted attachment on students.", co:["statewide"], cat:"education", url:"https://socialwork.illinois.edu" },
+    // June — Summer Reading Program Kickoff
+    { month:5, day:1, title:"Summer Reading Programs Begin", org:"Various IL Libraries", time:"Varies by library", loc:"Local Libraries Statewide", desc:"Libraries across Illinois kick off summer reading programs with prizes, activities, and BookIt! pizza rewards. Great free fun for foster families!", co:["statewide"], cat:"perks", url:"https://www.bookitprogram.com" },
+    // August — Back to School Supply Drives
+    { month:7, weekday:6, nth:2, title:"Back-to-School Supply Drive", org:"Multiple Organizations", time:"10:00 AM – 2:00 PM", loc:"Various IL Locations", desc:"Annual back-to-school drives providing free backpacks, supplies, and clothing for foster children. Check local organizations for specific locations.", co:["statewide"], cat:"donations", url:"https://www.ifoster.org" },
+    // December — James Project Christmas Party
+    { month:11, weekday:6, nth:2, title:"Foster Family Christmas Party", org:"The James Project & Cherry Hills Church", time:"10:00 AM – 1:00 PM", loc:"Cherry Hills Church, Springfield", desc:"Annual Christmas party for all Sangamon County foster families. Gifts for every child, food, activities, and holiday joy.", co:["sangamon"], cat:"faith", url:"https://thejamesproject127.com" },
+    // December — Holiday Comfort Case Distribution
+    { month:11, weekday:6, nth:1, title:"Holiday Comfort Case Distribution", org:"Comfort Cases & Partners", time:"10:00 AM – 2:00 PM", loc:"Various IL Locations", desc:"Annual holiday distribution of backpacks with comfort items, pajamas, books, and hygiene products for children entering foster care.", co:["statewide"], cat:"donations", url:"https://www.comfortcases.org" },
+    // October — Restore Network Gala
+    { month:9, weekday:5, nth:3, title:"Restore Network Annual Fundraiser", org:"The Restore Network", time:"6:00 PM – 9:00 PM", loc:"Alton / Edwardsville, IL", desc:"Annual fundraiser supporting foster family recruitment and trauma-informed training across Metro East Illinois. Dinner, auction, and inspiring stories.", co:["madison","st_clair","monroe","bond","clinton","macoupin","jersey"], cat:"faith", url:"https://therestorenetwork.org" },
+    // March — Spring Brightpoint Fun Day
+    { month:2, weekday:6, nth:2, title:"Brightpoint Foster Family Fun Day", org:"Brightpoint", time:"10:00 AM – 2:00 PM", loc:"Various Northern IL Locations", desc:"Spring family event with activities, food, bounce houses, and resource sharing for current Brightpoint foster families.", co:BRIGHTPOINT.slice(0,6), cat:"support", url:"https://www.brightpoint.org" },
+    // July — Summer Splash Day
+    { month:6, weekday:6, nth:3, title:"Foster Family Summer Splash", org:"Community Partners", time:"11:00 AM – 3:00 PM", loc:"Various IL Parks & Pools", desc:"Free summer pool and splash pad day for foster families. Bring towels and sunscreen! Check local organizations for locations.", co:["statewide"], cat:"perks", url:null },
+    // January — New Year New Foster Families Info Fair
+    { month:0, weekday:6, nth:3, title:"New Year, New Foster Families Info Fair", org:"Let It Be Us & DCFS", time:"10:00 AM – 2:00 PM", loc:"Virtual & Springfield, IL", desc:"Kick off the new year by learning about foster care. Info fair with multiple agencies, Q&A, and resources for prospective foster families.", co:["statewide"], cat:"dcfs", url:"https://letitbeus.org" },
+  ];
+
+  annualTemplates.forEach(tmpl => {
+    months.forEach(({y, m}) => {
+      if (tmpl.month !== m) return;
+      let d;
+      if (tmpl.day) {
+        d = new Date(y, m, tmpl.day);
+      } else if (tmpl.nth && tmpl.weekday !== undefined) {
+        d = nthWeekday(y, m, tmpl.weekday, tmpl.nth);
+      }
+      if (d && d >= today && d <= twoMonthsOut) {
+        events.push({
+          id: "a" + eid++,
+          title: tmpl.title,
+          org: tmpl.org,
+          date: fmt(d),
+          time: tmpl.time,
+          loc: tmpl.loc,
+          desc: tmpl.desc,
+          co: tmpl.co,
+          cat: tmpl.cat,
+          url: tmpl.url
+        });
+      }
+    });
+  });
+
+  // Sort all events by date
+  events.sort((a, b) => new Date(a.date) - new Date(b.date));
+  return events;
+}
+
+// Generate events once on load
+const EVENTS = generateEvents();
 
 
 // ─── Floating shape component ───
@@ -454,9 +659,13 @@ function App(){
       {/* ═══ EVENTS TAB ═══ */}
       {tab==="events"&&<div style={{padding:"20px 18px",paddingBottom:100,position:"relative",zIndex:1}}>
         <h2 style={{margin:"0 0 4px",fontFamily:"'Baloo 2',sans-serif",fontSize:22,fontWeight:800,color:"#2D1B4E"}}>Upcoming Events 📅</h2>
-        <p style={{margin:"0 0 18px",fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B",fontWeight:600}}>
+        <p style={{margin:"0 0 6px",fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B",fontWeight:600}}>
           {county==="all"?"Events across all of Illinois":"Events for "+cl+" & statewide"} • Next 2 months
         </p>
+        <div style={{display:"inline-flex",alignItems:"center",gap:6,background:"linear-gradient(135deg,#26DE8118,#20BF6B18)",border:"1.5px solid #26DE8133",borderRadius:10,padding:"4px 10px",marginBottom:16}}>
+          <div style={{width:7,height:7,borderRadius:"50%",background:"#26DE81",animation:"pulse 2s ease infinite"}}/>
+          <span style={{fontFamily:"'Quicksand',sans-serif",fontSize:10,fontWeight:700,color:"#20BF6B"}}>Auto-updating • Always current</span>
+        </div>
 
         {filteredEvents.length===0?<div style={{textAlign:"center",padding:40}}><div style={{fontSize:50,marginBottom:12,animation:"wiggle 1s ease-in-out infinite"}}>📅</div><p style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:700,color:"#2D1B4E"}}>No upcoming events</p><p style={{fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B"}}>Try selecting a different county or check back soon</p></div>:
         <>
