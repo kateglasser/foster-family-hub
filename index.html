@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#2D1B4E">
@@ -13,17 +13,29 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #FFFBF5; font-family: sans-serif; }
+    *:focus-visible { outline: 3px solid #4B7BEC; outline-offset: 2px; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 9999; background: #2D1B4E; color: #fff; padding: 12px 24px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 14px; border-radius: 0 0 12px 0; text-decoration: none; }
+    .skip-link:focus { left: 0; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
   </style>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <noscript>
+    <style>body{padding:40px;font-family:sans-serif;text-align:center}</style>
+    <h1>Foster Family Hub — Illinois Resources</h1>
+    <p>This app requires JavaScript. For immediate help:</p>
+    <p>DCFS Helpline: <a href="tel:8663685204">866-368-5204</a></p>
+    <p>Report abuse 24/7: <a href="tel:18002522873">1-800-252-2873</a></p>
+  </noscript>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
   <div id="root"></div>
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
 
-// ─── ALL 102 ILLINOIS COUNTIES ───
 const COUNTIES=[{id:"all",label:"All Illinois"},{id:"adams",label:"Adams County"},{id:"alexander",label:"Alexander County"},{id:"bond",label:"Bond County"},{id:"boone",label:"Boone County"},{id:"brown",label:"Brown County"},{id:"bureau",label:"Bureau County"},{id:"calhoun",label:"Calhoun County"},{id:"carroll",label:"Carroll County"},{id:"cass",label:"Cass County"},{id:"champaign",label:"Champaign County"},{id:"christian",label:"Christian County"},{id:"clark",label:"Clark County"},{id:"clay",label:"Clay County"},{id:"clinton",label:"Clinton County"},{id:"coles",label:"Coles County"},{id:"cook",label:"Cook County"},{id:"crawford",label:"Crawford County"},{id:"cumberland",label:"Cumberland County"},{id:"dekalb",label:"DeKalb County"},{id:"dewitt",label:"DeWitt County"},{id:"douglas",label:"Douglas County"},{id:"dupage",label:"DuPage County"},{id:"edgar",label:"Edgar County"},{id:"edwards",label:"Edwards County"},{id:"effingham",label:"Effingham County"},{id:"fayette",label:"Fayette County"},{id:"ford",label:"Ford County"},{id:"franklin",label:"Franklin County"},{id:"fulton",label:"Fulton County"},{id:"gallatin",label:"Gallatin County"},{id:"greene",label:"Greene County"},{id:"grundy",label:"Grundy County"},{id:"hamilton",label:"Hamilton County"},{id:"hancock",label:"Hancock County"},{id:"hardin",label:"Hardin County"},{id:"henderson",label:"Henderson County"},{id:"henry",label:"Henry County"},{id:"iroquois",label:"Iroquois County"},{id:"jackson",label:"Jackson County"},{id:"jasper",label:"Jasper County"},{id:"jefferson",label:"Jefferson County"},{id:"jersey",label:"Jersey County"},{id:"jo_daviess",label:"Jo Daviess County"},{id:"johnson",label:"Johnson County"},{id:"kane",label:"Kane County"},{id:"kankakee",label:"Kankakee County"},{id:"kendall",label:"Kendall County"},{id:"knox",label:"Knox County"},{id:"lake",label:"Lake County"},{id:"lasalle",label:"LaSalle County"},{id:"lawrence",label:"Lawrence County"},{id:"lee",label:"Lee County"},{id:"livingston",label:"Livingston County"},{id:"logan",label:"Logan County"},{id:"macon",label:"Macon County"},{id:"macoupin",label:"Macoupin County"},{id:"madison",label:"Madison County"},{id:"marion",label:"Marion County"},{id:"marshall",label:"Marshall County"},{id:"mason",label:"Mason County"},{id:"massac",label:"Massac County"},{id:"mcdonough",label:"McDonough County"},{id:"mchenry",label:"McHenry County"},{id:"mclean",label:"McLean County"},{id:"menard",label:"Menard County"},{id:"mercer",label:"Mercer County"},{id:"monroe",label:"Monroe County"},{id:"montgomery",label:"Montgomery County"},{id:"morgan",label:"Morgan County"},{id:"moultrie",label:"Moultrie County"},{id:"ogle",label:"Ogle County"},{id:"peoria",label:"Peoria County"},{id:"perry",label:"Perry County"},{id:"piatt",label:"Piatt County"},{id:"pike",label:"Pike County"},{id:"pope",label:"Pope County"},{id:"pulaski",label:"Pulaski County"},{id:"putnam",label:"Putnam County"},{id:"randolph",label:"Randolph County"},{id:"richland",label:"Richland County"},{id:"rock_island",label:"Rock Island County"},{id:"saline",label:"Saline County"},{id:"sangamon",label:"Sangamon County"},{id:"schuyler",label:"Schuyler County"},{id:"scott",label:"Scott County"},{id:"shelby",label:"Shelby County"},{id:"st_clair",label:"St. Clair County"},{id:"stark",label:"Stark County"},{id:"stephenson",label:"Stephenson County"},{id:"tazewell",label:"Tazewell County"},{id:"union",label:"Union County"},{id:"vermilion",label:"Vermilion County"},{id:"wabash",label:"Wabash County"},{id:"warren",label:"Warren County"},{id:"washington",label:"Washington County"},{id:"wayne",label:"Wayne County"},{id:"white",label:"White County"},{id:"whiteside",label:"Whiteside County"},{id:"will",label:"Will County"},{id:"williamson",label:"Williamson County"},{id:"winnebago",label:"Winnebago County"},{id:"woodford",label:"Woodford County"}];
 
 const CATEGORIES=[
@@ -46,9 +58,7 @@ const COOK_COLLAR=["cook","dupage","lake","will","kane","mchenry"];
 const BRIGHTPOINT=["cook","dupage","lake","will","kane","winnebago","ogle","boone","stephenson","dekalb","mchenry","st_clair","madison","randolph","bond","clinton","jersey"];
 const CENTRAL_IL=["sangamon","champaign","peoria","mclean","macon","tazewell","woodford","logan","dewitt","menard","piatt","ford","livingston","iroquois","vermilion","coles","douglas","edgar","clark","cumberland","moultrie","shelby","christian","montgomery","macoupin","morgan","cass","brown","schuyler","adams","hancock","mcdonough","fulton","knox","warren","henderson","henry","mercer","bureau","marshall","putnam","stark","mason","rock_island"];
 const SOUTH_IL=["st_clair","madison","bond","clinton","jersey","monroe","randolph","washington","perry","jackson","williamson","franklin","jefferson","marion","clay","richland","effingham","fayette","jasper","crawford","lawrence","edwards","wabash","white","saline","gallatin","hardin","pope","johnson","union","pulaski","massac","alexander","greene","calhoun","pike","scott","hamilton","wayne"];
-
 const R=[
-  // ─── DONATIONS ───
   {id:1,c:"donations",n:"IL Foster Closet",d:"Free clothing, shoes, toys, blankets and essentials for foster children across Illinois. Run by foster parents for foster parents.",p:null,u:"https://www.ilfostercloset.com",r:"Statewide",co:["statewide"]},
   {id:2,c:"donations",n:"Release Care Closet",d:"High-quality clothing, bedding, diapers and toys at no cost. Provided over 1,950 children with items last year.",p:null,u:"https://releaseinc.org/care-closet/",r:"Chicagoland",co:COOK_COLLAR},
   {id:3,c:"donations",n:"The Closet — The Foster Network",d:"First-week essentials, seasonal items and baby equipment. Serves ~245 children per month.",p:null,u:"https://www.thefosternet.org/the-closet",r:"Illinois",co:["statewide"]},
@@ -59,8 +69,8 @@ const R=[
   {id:8,c:"donations",n:"Comfort Cases",d:"Backpacks with comfort and care items so foster children don't carry belongings in trash bags.",p:null,u:"https://www.comfortcases.org",r:"Nationwide",co:["statewide"]},
   {id:9,c:"donations",n:"The James Project — Closet 1:27",d:"Clothing, beds, diapers, hygiene kits and essentials delivered to newly placed foster children in Sangamon County.",p:null,u:"https://thejamesproject127.com",r:"Sangamon County",co:["sangamon"]},
   {id:100,c:"donations",n:"DCFS Startup Funds Program",d:"Preloaded VISA cards for new foster placements to purchase bedding, clothing and hygiene essentials.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
-
-  // ─── SUPPORT GROUPS ───
+  {id:813,c:"donations",n:"Cradles to Crayons Chicago",d:"Free clothing, shoes, school supplies, and essentials for children in need. Serves foster families through agency referrals.",p:null,u:"https://www.cradlestocrayons.org/chicago/",r:"Chicagoland",co:COOK_COLLAR},
+  {id:814,c:"donations",n:"Share Our Spare",d:"Connects families who have outgrown baby gear with families who need it. Car seats, strollers, cribs, and more — all free.",p:null,u:"https://www.shareourspare.org",r:"Chicagoland",co:COOK_COLLAR},
   {id:10,c:"support",n:"One Family Illinois",d:"Keeps siblings together in foster care. Family counseling, health & nutrition, and housing.",p:null,u:"https://www.onefamilyillinois.org",r:"Chicago & Lockport",co:["cook","will"]},
   {id:11,c:"support",n:"Second Nurture",d:"Communities wrap around foster families with monthly gatherings, support, and belonging.",p:null,u:"https://www.2nurture.org",r:"Chicagoland & National",co:["statewide"]},
   {id:12,c:"support",n:"Families Rising (NACAC)",d:"Monthly in-person events with tangible support and trauma-informed care resources.",p:null,u:"https://nacac.org",r:"Multiple Locations",co:["statewide"]},
@@ -80,8 +90,10 @@ const R=[
   {id:101,c:"support",n:"Little City Foster Care",d:"Top-performing foster care program with 24/7 crisis support, mentoring, therapy, respite hours, and a private support group.",p:null,u:"https://littlecity.org/programs-services/foster-care-adoption-services/",r:"Chicago & Matteson",co:["cook","will"]},
   {id:102,c:"support",n:"Youth Service Bureau of IL Valley",d:"Dedicated caseworkers, family outings, recognition events, and school advocacy for foster families.",p:null,u:"https://ysbiv.org/programs-services/foster/",r:"Illinois Valley",co:["lasalle","bureau","putnam","marshall","livingston"]},
   {id:103,c:"support",n:"Ally-IL (DCFS)",d:"Peer mentoring app connecting licensed foster parents with experienced mentors for real-time guidance and support.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
-
-  // ─── LEGAL ───
+  {id:800,c:"support",n:"Allendale Association — Specialized Foster Care",d:"Specialized foster care for children with behavioral/emotional needs. Monthly stipend, enrichment funds, respite, nurse on staff, and training dinners with childcare.",p:null,u:"https://allendale4kids.org/programs-services/community-services/foster-care/",r:"Chicagoland",co:COOK_COLLAR},
+  {id:801,c:"support",n:"Volunteers of America Illinois",d:"Foster care, reunification services, counseling, parent training, crisis intervention, and respite care across Chicago.",p:"312-564-2400",u:"https://www.voaillinois.org/services/child-welfare-services/",r:"Chicago",co:["cook"]},
+  {id:802,c:"support",n:"Center for Youth & Family Solutions",d:"Foster care, counseling, and family support services across Central Illinois. Multiple office locations.",p:null,u:"https://www.cyfsolutions.org",r:"Central IL",co:["peoria","tazewell","woodford","fulton","knox","mclean","mason","logan","marshall","stark"]},
+  {id:803,c:"support",n:"Cunningham Children's Home",d:"Therapeutic foster care, residential treatment, and family services for Central Illinois youth.",p:null,u:"https://www.cunninghamhome.org",r:"Champaign & Central IL",co:["champaign","vermilion","mclean","macon","piatt","ford","douglas","coles"]},
   {id:30,c:"legal",n:"Illinois Legal Aid Online",d:"Free legal information covering benefits, aging out, education rights, and guardianship.",p:null,u:"https://www.illinoislegalaid.org",r:"Statewide",co:["statewide"]},
   {id:31,c:"legal",n:"Greenlight Family Services",d:"Educational advocacy and legal supports for adoptive and guardianship families.",p:null,u:"https://greenlightfamilyservices.org",r:"Statewide",co:["statewide"]},
   {id:32,c:"legal",n:"Illinois CASA",d:"Court Appointed Special Advocates — a voice for every child in court.",p:null,u:"https://illinoiscasa.org",r:"Statewide",co:["statewide"]},
@@ -90,8 +102,8 @@ const R=[
   {id:35,c:"legal",n:"DuPage Bar Referral Service",d:"Attorney referrals for foster and adoptive families in DuPage County.",p:"630-653-9109",u:null,r:"DuPage County",co:["dupage"]},
   {id:36,c:"legal",n:"Mimi's House — Advocacy",d:"Helps Lake County families navigate DCFS forms, visitation docs, and youth rights.",p:"847-242-1126",u:"https://mimishousefac.org/services-resources/",r:"Lake County",co:["lake","cook"]},
   {id:37,c:"legal",n:"Land of Lincoln Legal Aid",d:"Free civil legal services for low-income families across central and southern Illinois.",p:null,u:"https://lincolnlegal.org",r:"Central & Southern IL",co:[...CENTRAL_IL,...SOUTH_IL]},
-
-  // ─── DCFS ───
+  {id:808,c:"legal",n:"Equip for Equality",d:"Legal advocacy for people with disabilities including foster children with special needs. Free protection and advocacy services.",p:"800-537-2632",u:"https://www.equipforequality.org",r:"Statewide",co:["statewide"]},
+  {id:809,c:"legal",n:"Prairie State Legal Services",d:"Free legal aid for low-income families in Northern and Central Illinois. Family law, benefits, housing, and education rights.",p:null,u:"https://www.pslegal.org",r:"Northern & Central IL",co:["winnebago","boone","carroll","dekalb","jo_daviess","kane","kendall","lee","mchenry","ogle","stephenson","whiteside","bureau","grundy","lasalle","livingston","marshall","putnam","woodford"]},
   {id:40,c:"dcfs",n:"DCFS Foster Parent Helpline",d:"Trained DCFS staff for support, questions, and resolving issues.",p:"866-368-5204",u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
   {id:41,c:"dcfs",n:"SPIDER Resource Database",d:"1,700+ agencies and 4,200+ programs searchable by your location.",p:null,u:"https://spider.dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
   {id:42,c:"dcfs",n:"Youth in Care Damage Reimbursement",d:"Coverage for foster parents who suffer damages by youth in care.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
@@ -104,8 +116,6 @@ const R=[
   {id:104,c:"dcfs",n:"KIND Act Benefits",d:"New law making it easier for grandparents and relatives to become certified caregivers with increased benefits.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare.html",r:"Statewide",co:["statewide"]},
   {id:105,c:"dcfs",n:"Heart Gallery of Illinois",d:"Photo listing of children awaiting adoption. Browse profiles and learn how to provide a forever family.",p:null,u:"https://letitbeus.org/heart-gallery-of-illinois/",r:"Statewide",co:["statewide"]},
   {id:106,c:"dcfs",n:"FARE Exit Interviews",d:"All children 5+ leaving a foster home complete an exit interview so their voice is heard and experiences documented.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare.html",r:"Statewide",co:["statewide"]},
-
-  // ─── EDUCATION ───
   {id:50,c:"education",n:"DCFS Tuition & Fee Waiver",d:"Free tuition at all Illinois public colleges. Fill out DCFS Form 438A.",p:null,u:"https://www.illinoislegalaid.org/legal-information/aging-out-foster-care",r:"Statewide",co:["statewide"]},
   {id:51,c:"education",n:"DCFS Scholarship Program",d:"For anyone adopted or in guardianship from Illinois foster care.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
   {id:52,c:"education",n:"PRIDE Training",d:"34-hour pre-service training for licensing. Virtual or in-person. Relatives: 6 hrs.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
@@ -114,8 +124,9 @@ const R=[
   {id:55,c:"education",n:"Life Skills Program",d:"Ages 14–20: independent living skills and transition planning.",p:"217-557-2689",u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
   {id:56,c:"education",n:"Foster Progress",d:"Financial aid, FAFSA guidance, and college resources for foster youth.",p:null,u:"https://www.fosterprogress.org",r:"Nationwide",co:["statewide"]},
   {id:107,c:"education",n:"Adoption-Friendly Schools Campaign",d:"Training for educators on foster care, kinship care, and the impact of early loss and disrupted attachment.",p:null,u:"https://socialwork.illinois.edu",r:"Statewide",co:["statewide"]},
-
-  // ─── HEALTH ───
+  {id:810,c:"education",n:"Head Start / Early Head Start",d:"Free comprehensive early childhood education for children 0–5 from low-income families including foster families. Available in every county.",p:null,u:"https://eclkc.ohs.acf.hhs.gov/hslc/HeadStartOffices",r:"Statewide",co:["statewide"]},
+  {id:811,c:"education",n:"Illinois Birth to Three Program",d:"Free early intervention services for infants and toddlers with developmental delays. Referrals through your pediatrician or caseworker.",p:"800-323-4769",u:null,r:"Statewide",co:["statewide"]},
+  {id:812,c:"education",n:"Education Training Vouchers (ETV)",d:"Up to $5,000/year for post-secondary education for current and former foster youth ages 16–23.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
   {id:60,c:"health",n:"ASAP — Adoption Support",d:"Free crisis intervention, respite, counseling, groups. Up to $500 cash/year.",p:null,u:"https://pathbeyondadoption.illinois.gov/resources.html",r:"Statewide",co:["statewide"]},
   {id:61,c:"health",n:"Fussy Baby Network",d:"Specialists for fussy infants — bonding and stress reduction. English/Spanish.",p:"888-431-2229",u:"https://www.erikson.edu/fussy-baby-network/",r:"Statewide",co:["statewide"]},
   {id:62,c:"health",n:"988 Crisis Lifeline",d:"24/7 free support for mental health or substance use crises.",p:"988",u:"https://988lifeline.org",r:"Nationwide",co:["statewide"]},
@@ -131,32 +142,34 @@ const R=[
   {id:72,c:"health",n:"LSSI Peoria Post-Adoption",d:"Support for Peoria region: Bureau, Fulton, Knox, Peoria, Rock Island and more.",p:"309-671-0300",u:null,r:"Peoria Region",co:["bureau","fulton","henderson","henry","knox","lasalle","logan","marshall","mason","mcdonough","mercer","peoria","putnam","rock_island","stark","tazewell","warren","woodford"]},
   {id:73,c:"health",n:"Lutheran Child & Family Services",d:"Foster care and therapeutic support in the Chicago suburbs.",p:null,u:"https://lcfs.org/program/foster-care/",r:"Chicagoland",co:COOK_COLLAR},
   {id:74,c:"health",n:"Cornerstone — Quincy",d:"Post-adoption for western IL: Adams, Brown, Cass, Hancock, Morgan, Pike and more.",p:"217-222-8254",u:null,r:"Western IL",co:["adams","brown","cass","greene","hancock","morgan","pike","schuyler","scott"]},
-
-  // ─── FAITH COMMUNITIES ───
+  {id:804,c:"health",n:"DCFS YouthCare Medical Card",d:"Every child in DCFS care receives a medical card covering doctor visits, prescriptions, dental, vision, therapy, and hospitalization at no cost.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:805,c:"health",n:"Illinois Poison Center",d:"24/7 poison emergency hotline. Free, confidential. Important for foster parents of toddlers and young children.",p:"1-800-222-1222",u:"https://illinoispoisoncenter.org",r:"Statewide",co:["statewide"]},
+  {id:806,c:"health",n:"Crisis Text Line",d:"Text HOME to 741741 for free 24/7 crisis support via text. Good for older foster youth who prefer texting over calling.",p:null,u:"https://www.crisistextline.org",r:"Nationwide",co:["statewide"]},
+  {id:807,c:"health",n:"NAMI Illinois — Mental Health",d:"National Alliance on Mental Illness Illinois chapter. Free support groups, education programs, and crisis resources for families.",p:null,u:"https://namiillinois.org",r:"Statewide",co:["statewide"]},
   {id:200,c:"faith",n:"The Restore Network",d:"Faith-based org partnering with 30+ churches across Illinois. Provides trauma-informed training (TBRI), wrap-around support, parent coaching, meals, car seats, and relentless advocacy for foster families.",p:null,u:"https://therestorenetwork.org",r:"Madison, Monroe, St. Clair & more",co:["madison","monroe","st_clair","bond","clinton","macoupin","jersey"]},
-  {id:201,c:"faith",n:"Restore Network — Monroe County",d:"Four partner churches (Life Community, First Baptist Columbia, Hope Christian, Life Church X) providing foster family recruitment, trauma training, and community support.",p:null,u:"https://therestorenetwork.org/monroe-county/",r:"Monroe County",co:["monroe"]},
+  {id:201,c:"faith",n:"Restore Network — Monroe County",d:"Four partner churches providing foster family recruitment, trauma training, and community support.",p:null,u:"https://therestorenetwork.org/monroe-county/",r:"Monroe County",co:["monroe"]},
   {id:202,c:"faith",n:"Cherry Hills Church — James Project Partner",d:"Hosts annual Christmas party for all Sangamon County foster families. Volunteers sort clothing, do yardwork, tutoring, and deliver meals.",p:null,u:"https://cherryhillsfamily.org",r:"Sangamon County",co:["sangamon"]},
   {id:203,c:"faith",n:"Catholic Charities Foster Support",d:"Monthly support groups, counseling, and family services for foster and adoptive families through the Archdiocese of Chicago.",p:"773-372-8109",u:null,r:"Cook County",co:["cook"]},
   {id:204,c:"faith",n:"Fostering Hope — Focus on the Family",d:"Free church resources: sermon outlines, support group curriculum, birth family engagement guides, and Fostering from a Biblical Worldview training.",p:null,u:"https://www.focusonthefamily.com/pro-life/fostering-hope-in-foster-care/",r:"Nationwide",co:["statewide"]},
   {id:205,c:"faith",n:"Alliance for Orphans",d:"Helps churches organize foster care ministries with meal trains, tangible needs, lawn care, home projects, and community-wide awareness campaigns.",p:null,u:"https://alliance4orphans.org/churches/",r:"Nationwide",co:["statewide"]},
   {id:206,c:"faith",n:"LCFS Church Partnerships",d:"Lutheran Child & Family Services partners with local churches for foster parent informational meetings, training, and community support.",p:"708-771-7180",u:"https://lcfs.org/program/foster-care/",r:"Chicagoland",co:COOK_COLLAR},
-  {id:207,c:"faith",n:"Caritas Family Solutions (Faith-Based)",d:"Catholic Charities partner providing foster care, adoption, and family counseling rooted in faith-based trauma-informed care across central and southern Illinois.",p:null,u:"https://caritasfamilysolutions.org",r:"Southern & Central IL",co:[...SOUTH_IL,...CENTRAL_IL.slice(0,10)]},
+  {id:207,c:"faith",n:"Caritas Family Solutions (Faith-Based)",d:"Catholic Charities partner providing foster care, adoption, and family counseling rooted in faith-based trauma-informed care.",p:null,u:"https://caritasfamilysolutions.org",r:"Southern & Central IL",co:[...SOUTH_IL,...CENTRAL_IL.slice(0,10)]},
   {id:208,c:"faith",n:"Second Nurture — Synagogue Network",d:"Jewish communities and synagogues wrapping around foster families with monthly gatherings, practical support, and belonging.",p:null,u:"https://www.2nurture.org",r:"Nationwide",co:["statewide"]},
   {id:209,c:"faith",n:"Safe Families for Children",d:"Church-supported network providing temporary host families for children in crisis before DCFS involvement, keeping families together.",p:null,u:"https://safe-families.org",r:"Statewide",co:["statewide"]},
-
-  // ─── DISCOUNTS & PERKS ───
+  {id:823,c:"faith",n:"Lifeline Children's Services",d:"National Christian adoption and foster care agency with Illinois offices. Provides training, home studies, and wraparound church engagement programs.",p:null,u:"https://lifelinechild.org",r:"Nationwide",co:["statewide"]},
+  {id:824,c:"faith",n:"Bethany Christian Services",d:"One of the largest adoption and foster care agencies in the US. Provides foster parent training, support groups, counseling, and refugee services.",p:null,u:"https://bethany.org",r:"Nationwide",co:["statewide"]},
   {id:300,c:"perks",n:"iFoster Membership (Free)",d:"Free membership unlocks 500+ resources: Working Advantage discounts, Abenity deals, free tutoring, eye exams, glasses, career programs, and Office Depot savings up to 80% off.",p:null,u:"https://www.ifoster.org",r:"Nationwide",co:["statewide"]},
-  {id:301,c:"perks",n:"Museums for All (EBT/LINK Card)",d:"Free or $1–3 admission to 1,000+ museums nationwide with your Illinois LINK card. Includes Museum of Science & Industry, Shedd Aquarium, Art Institute & more.",p:null,u:"https://museums4all.org",r:"Nationwide",co:["statewide"]},
+  {id:301,c:"perks",n:"Museums for All (EBT/LINK Card)",d:"Free or $1–3 admission to 1,000+ museums nationwide with your Illinois LINK card.",p:null,u:"https://museums4all.org",r:"Nationwide",co:["statewide"]},
   {id:302,c:"perks",n:"Museum of Science & Industry — Free",d:"Free entry for 2 adults + 6 children with EBT or WIC card. Over 400,000 sq ft of hands-on exhibits.",p:null,u:"https://www.msichicago.org",r:"Chicago",co:["cook"]},
   {id:303,c:"perks",n:"Shedd Aquarium — Free (EBT)",d:"Free admission to permanent exhibits + Stingray Touch with your EBT or WIC card.",p:null,u:"https://www.sheddaquarium.org",r:"Chicago",co:["cook"]},
   {id:304,c:"perks",n:"Chicago Children's Museum — $3/6",d:"Just $3 total for up to 6 people with your Illinois LINK card.",p:null,u:"https://www.chicagochildrensmuseum.org",r:"Chicago",co:["cook"]},
   {id:305,c:"perks",n:"Art Institute of Chicago — Free",d:"Free admission with Illinois LINK card. Always free for Chicago residents on certain days.",p:null,u:"https://www.artic.edu",r:"Chicago",co:["cook"]},
   {id:306,c:"perks",n:"Lincoln Park Zoo — Always Free",d:"Free admission year-round. LINK cardholders get 10% off food and retail.",p:null,u:"https://www.lpzoo.org",r:"Chicago",co:["cook"]},
   {id:307,c:"perks",n:"Morton Arboretum — $1/person",d:"$1 admission for LINK cardholders + up to 7 guests. Award-winning children's garden.",p:null,u:"https://www.mortonarb.org",r:"DuPage County",co:["dupage"]},
-  {id:308,c:"perks",n:"Amazon Prime Discount",d:"50% off Amazon Prime for families with EBT or Medicaid. Free 2-day shipping, Prime Video, Music & more.",p:null,u:"https://www.amazon.com/58f8026f-0658-47d0-9752-f6fa2c69b2e2/qualify",r:"Nationwide",co:["statewide"]},
+  {id:308,c:"perks",n:"Amazon Prime Discount",d:"50% off Amazon Prime for families with EBT or Medicaid.",p:null,u:"https://www.amazon.com/58f8026f-0658-47d0-9752-f6fa2c69b2e2/qualify",r:"Nationwide",co:["statewide"]},
   {id:309,c:"perks",n:"Every Kid Sports — $150/child",d:"Up to $150 per child to cover sports registration fees for foster families.",p:null,u:"https://www.everykidsports.org",r:"Nationwide",co:["statewide"]},
   {id:310,c:"perks",n:"Kids Bowl Free",d:"2 free games per day all summer at participating bowling centers for kids.",p:null,u:"https://www.kidsbowlfree.com",r:"Nationwide",co:["statewide"]},
-  {id:311,c:"perks",n:"Once Upon a Child — 10% Off",d:"10% discount for foster families on gently used children's clothing, toys, and gear at participating stores.",p:null,u:"https://www.onceuponachild.com",r:"Nationwide",co:["statewide"]},
+  {id:311,c:"perks",n:"Once Upon a Child — 10% Off",d:"10% discount for foster families on gently used children's clothing, toys, and gear.",p:null,u:"https://www.onceuponachild.com",r:"Nationwide",co:["statewide"]},
   {id:312,c:"perks",n:"YMCA Foster Family Discount",d:"Many local YMCAs offer 50% scholarship on memberships, classes, camps, and activities for foster families.",p:null,u:"https://www.ymca.org",r:"Varies by location",co:["statewide"]},
   {id:313,c:"perks",n:"Quincy Children's Museum — 50% Off",d:"50% off admission for local foster families and LINK/military families.",p:null,u:null,r:"Adams County",co:["adams"]},
   {id:314,c:"perks",n:"Dick's Sporting Goods — $150 Sports",d:"Will pay up to $150 for youth sports registration fees for foster children.",p:null,u:"https://www.dickssportinggoods.com/s/sports-matter",r:"Nationwide",co:["statewide"]},
@@ -164,9 +177,12 @@ const R=[
   {id:316,c:"perks",n:"Vision Service Plan — Free Glasses",d:"Free vision exams and eyeglasses for children and youth up to age 24 without vision insurance.",p:null,u:"https://www.vsp.com",r:"Nationwide",co:["statewide"]},
   {id:317,c:"perks",n:"Thrive Market — Free Membership",d:"Free 1-year organic food membership for families in financial need, including foster families.",p:null,u:"https://thrivemarket.com/thrive-gives",r:"Nationwide",co:["statewide"]},
   {id:318,c:"perks",n:"Chicago Botanic Garden — Free",d:"Always free admission. LINK cardholders get reduced parking rates.",p:null,u:"https://www.chicagobotanic.org",r:"Cook County",co:["cook"]},
-  {id:319,c:"perks",n:"BookIt! Pizza Hut Reading Program",d:"Kids earn a free personal pan pizza for completing reading goals. Great summer activity.",p:null,u:"https://www.bookitprogram.com",r:"Nationwide",co:["statewide"]},
-
-  // ─── NATIONAL ───
+  {id:319,c:"perks",n:"BookIt! Pizza Hut Reading Program",d:"Kids earn a free personal pan pizza for completing reading goals.",p:null,u:"https://www.bookitprogram.com",r:"Nationwide",co:["statewide"]},
+  {id:818,c:"perks",n:"Cantigny Park — Free Admission",d:"Always free admission to Cantigny Park in Wheaton. Military and LINK card discounts available.",p:null,u:"https://www.cantigny.org",r:"DuPage County",co:["dupage"]},
+  {id:819,c:"perks",n:"Klehm Arboretum — EBT Discount",d:"Discounted admission for EBT/WIC families. 150+ acres of accessible paths and gardens in Rockford.",p:null,u:"https://klehm.org",r:"Winnebago County",co:["winnebago"]},
+  {id:820,c:"perks",n:"Brookfield Zoo — Discounted Days",d:"Reduced or free admission on select days for Illinois residents. LINK card holders get special pricing.",p:null,u:"https://www.czs.org/Brookfield-Zoo",r:"Cook County",co:["cook"]},
+  {id:821,c:"perks",n:"Peoria PlayHouse Children's Museum",d:"Discounted admission for LINK/EBT card holders. Interactive exhibits for children birth through age 10.",p:null,u:"https://www.peoriaplayhouse.org",r:"Peoria County",co:["peoria"]},
+  {id:822,c:"perks",n:"Batavia Depot Museum — Free",d:"Always free! History exhibits from 10,000 BC to today's rocket scientists.",p:null,u:null,r:"Kane County",co:["kane"]},
   {id:80,c:"national",n:"National Foster Parent Assoc.",d:"Education, training, legislative advocacy, and 24/7 Training Institute.",p:null,u:"https://nfpaonline.org",r:"Nationwide",co:["statewide"]},
   {id:81,c:"national",n:"AdoptUSKids",d:"Photo listings of waiting children, state resources, and family support.",p:null,u:"https://adoptuskids.org",r:"Nationwide",co:["statewide"]},
   {id:82,c:"national",n:"Casey Family Programs",d:"Nation's largest foundation focused on reducing the need for foster care.",p:null,u:"https://www.casey.org",r:"Nationwide",co:["statewide"]},
@@ -182,354 +198,149 @@ const R=[
   {id:92,c:"national",n:"CASA for Children (National)",d:"950+ programs training volunteers to advocate for children in court.",p:null,u:"https://www.casaforchildren.org",r:"Nationwide",co:["statewide"]},
   {id:93,c:"national",n:"Second Nurture (National)",d:"Communities and synagogues wrapping around foster families with love.",p:null,u:"https://www.2nurture.org",r:"Nationwide",co:["statewide"]},
   {id:108,c:"national",n:"FosterUSKids",d:"State-by-state guides to becoming a foster parent. Connect directly with Illinois child-placing agencies.",p:null,u:"https://www.fosteruskids.org/usa/illinois",r:"Nationwide",co:["statewide"]},
-
-  // ─── EVENTS & ACTIVITIES ───
-  {id:400,c:"events_act",n:"LCFS Foster Parent Meetings",d:"Monthly info meetings at Grace Lutheran Church in River Forest. Learn about becoming a foster parent — no obligation.",p:"708-771-7180",u:"https://lcfs.org/program/foster-care/",r:"Cook County",co:["cook"]},
-  {id:401,c:"events_act",n:"Let It Be Us — Info Sessions",d:"Free monthly online info sessions about becoming a licensed foster or adoptive parent in Illinois. Open to everyone statewide.",p:"800-572-2390",u:"https://letitbeus.org",r:"Statewide",co:["statewide"]},
-  {id:402,c:"events_act",n:"The Restore Network Events",d:"Quarterly retreats, monthly parent coaching, and trauma-informed training (TBRI) for foster families across Metro East Illinois.",p:null,u:"https://therestorenetwork.org",r:"Madison, Monroe & St. Clair",co:["madison","monroe","st_clair","bond","clinton"]},
-  {id:403,c:"events_act",n:"The James Project — Volunteer Events",d:"Monthly volunteer days at Closet 1:27 in Springfield plus the annual Christmas party for all Sangamon County foster families.",p:null,u:"https://thejamesproject127.com",r:"Sangamon County",co:["sangamon"]},
-  {id:404,c:"events_act",n:"Second Nurture — Respite & Gatherings",d:"Monthly respite nights and community gatherings wrapping around foster families with practical support in Chicagoland.",p:null,u:"https://www.2nurture.org",r:"Chicagoland",co:COOK_COLLAR},
-  {id:405,c:"events_act",n:"One Family Illinois Events",d:"Annual appreciation picnics, community events, and resource fairs for foster and adoptive families in Cook and Will counties.",p:null,u:"https://www.onefamilyillinois.org",r:"Chicago & Lockport",co:["cook","will"]},
-  {id:406,c:"events_act",n:"Little City Open Houses & Activities",d:"Quarterly open houses and monthly family activity days for foster families. Special needs-focused programs in Palatine and Matteson.",p:null,u:"https://littlecity.org/programs-services/foster-care-adoption-services/",r:"Cook & Will",co:["cook","will"]},
-  {id:407,c:"events_act",n:"Brightpoint Family Fun Days",d:"Seasonal family fun days with activities, food, and resource sharing for foster families across Northern Illinois.",p:null,u:"https://www.brightpoint.org",r:"Northern IL",co:BRIGHTPOINT.slice(0,6)},
-  {id:408,c:"events_act",n:"The Baby Fold — Monthly Support",d:"Monthly support groups in Normal, IL for foster and adoptive parents in Central Illinois. Childcare provided at every meeting.",p:"309-557-1149",u:null,r:"Central IL",co:["mclean","champaign","sangamon","macon","tazewell","dewitt","logan","piatt"]},
-  {id:409,c:"events_act",n:"Illinois CASA — Volunteer Training",d:"Quarterly training sessions to become a Court Appointed Special Advocate for children in foster care. Multiple locations statewide.",p:null,u:"https://illinoiscasa.org",r:"Statewide",co:["statewide"]},
-  {id:410,c:"events_act",n:"Mimi's House — Resource Days",d:"Monthly resource days and seasonal supply drives for Lake County foster families. Clothing, diapers, car seats, and essentials.",p:"847-242-1126",u:"https://mimishousefac.org",r:"Lake & North Cook",co:["lake","cook"]},
-  {id:411,c:"events_act",n:"MSI Chicago — Free Museum Days",d:"Monthly free admission for EBT/WIC families at the Museum of Science & Industry. 2 adults + 6 kids. 400,000+ sq ft of exhibits!",p:null,u:"https://www.msichicago.org",r:"Chicago",co:["cook"]},
-  {id:412,c:"events_act",n:"Art Institute — Free Tuesdays",d:"Free admission for all Illinois residents on the first Tuesday of every month. World-class art for the whole family.",p:null,u:"https://www.artic.edu",r:"Chicago",co:["cook"]},
-  {id:413,c:"events_act",n:"iFoster — Monthly Webinars",d:"Free monthly webinars showing foster families how to access 500+ resources, discounts, and benefits through iFoster membership.",p:null,u:"https://www.ifoster.org",r:"Nationwide",co:["statewide"]},
-  {id:414,c:"events_act",n:"Kids Bowl Free — Summer Program",d:"Free bowling all summer for kids at participating Illinois centers. Registration opens each May. 2 free games per child per day!",p:null,u:"https://www.kidsbowlfree.com",r:"Nationwide",co:["statewide"]},
-  {id:415,c:"events_act",n:"Foster & Adoptive Care Coalition Events",d:"Give STL Day fundraiser, trivia nights, Hope in a Handbag gala, and more supporting IL & MO foster children year-round.",p:null,u:"https://www.foster-adopt.org/events/",r:"IL & MO",co:["statewide","st_clair","madison"]},
-  {id:416,c:"events_act",n:"Together We Rise — Bike Builds",d:"Quarterly volunteer events assembling bikes for children entering foster care. All ages welcome — no experience needed!",p:null,u:"https://www.togetherwerise.org",r:"Chicagoland",co:COOK_COLLAR},
-  {id:417,c:"events_act",n:"DCFS Foster Care Month Events",d:"Every May: awareness walks, appreciation dinners, supply drives, and recognition events across all 102 Illinois counties.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-  {id:418,c:"events_act",n:"Spero Family Services — Training",d:"Monthly coffee meetups and annual training sessions for therapeutic foster families in Southern Illinois.",p:null,u:"https://www.sperofs.org/spero-foster-care/",r:"Southern IL",co:SOUTH_IL.slice(0,10)},
-  {id:419,c:"events_act",n:"Family Core — Peoria Support",d:"Monthly foster and adoptive parent support groups with guest speakers and resource sharing in the Peoria region.",p:"309-676-2400",u:null,r:"Peoria Region",co:["peoria","tazewell","woodford","mclean","knox","fulton"]},
-  {id:420,c:"events_act",n:"Lincoln Park Zoo — Free Year-Round",d:"Always free admission! Monthly foster family meetup on second Fridays. LINK cardholders get 10% off food and retail.",p:null,u:"https://www.lpzoo.org",r:"Chicago",co:["cook"]},
-  {id:421,c:"events_act",n:"Comfort Cases — Holiday Distributions",d:"Annual holiday backpack distributions with comfort items, pajamas, books, and hygiene products for children entering care.",p:null,u:"https://www.comfortcases.org",r:"Nationwide",co:["statewide"]},
-  {id:422,c:"events_act",n:"CASA Kane County — Info Nights",d:"Monthly info sessions in Geneva to learn how to volunteer as a Court Appointed Special Advocate for Kane County children.",p:null,u:"https://kanecountyconnects.com",r:"Kane County",co:["kane"]},
-  {id:423,c:"events_act",n:"Family Focus DuPage — Parent Cafés",d:"Monthly Parent Café gatherings for foster and adoptive families. Coffee, discussion, and community resources with childcare available.",p:null,u:"https://www.family-focus.org/center/dupage/",r:"DuPage County",co:["dupage"]},
-  {id:424,c:"events_act",n:"Caritas Family Solutions — Support Meetings",d:"Monthly support meetings for foster and adoptive families across Southern and Central Illinois. Open to all.",p:null,u:"https://caritasfamilysolutions.org",r:"Southern & Central IL",co:["st_clair","madison","bond","clinton","monroe"]},
-  {id:425,c:"events_act",n:"National Adoption Day — November",d:"Every November, courts across Illinois finalize adoptions and celebrate families formed through foster care.",p:null,u:"https://www.nationaladoptionday.org",r:"Statewide",co:["statewide"]},
-  {id:426,c:"events_act",n:"IL Foster Closet — Quarterly Drives",d:"Quarterly large-scale distribution events with free clothing, shoes, toys, blankets, and essentials for foster children statewide.",p:null,u:"https://www.ilfostercloset.com",r:"Statewide",co:["statewide"]},
-  {id:427,c:"events_act",n:"BookIt! Summer Reading Program",d:"Kids earn free Pizza Hut personal pan pizzas for completing reading goals. Libraries across Illinois participate every summer.",p:null,u:"https://www.bookitprogram.com",r:"Nationwide",co:["statewide"]},
-  {id:428,c:"events_act",n:"Adoptive Families Today — Gatherings",d:"Quarterly meetups with featured speakers, breakout discussions, resource tables, and refreshments for all adoptive and foster families.",p:null,u:"https://adoptuskids.org",r:"Palatine / Statewide",co:["statewide"]},
-
-  // ─── CHILDCARE & RESPITE ───
-  {id:500,c:"childcare",n:"CCAP — Child Care Assistance (Free)",d:"Foster parents get free childcare through CCAP with NO copay. Contact your caseworker to apply. Covers ages 0–12 (special needs to 18).",p:"877-202-4453",u:"https://getchildcareil.org",r:"Statewide",co:["statewide"]},
-  {id:501,c:"childcare",n:"Illinois Cares for Kids",d:"Find quality childcare providers near you who accept CCAP. Search by zip code, filter by hours, type, and ratings.",p:null,u:"https://www.illinoiscaresforkids.org",r:"Statewide",co:["statewide"]},
-  {id:502,c:"childcare",n:"DCFS Respite Care",d:"Short-term relief for foster parents. Request respite hours through your caseworker — someone else cares for your foster child while you recharge.",p:"866-368-5204",u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
-  {id:503,c:"childcare",n:"Illinois Respite Coalition",d:"Emergency respite funding for caregivers of children with special needs. Click your county on their map for local respite providers.",p:null,u:"http://www.illinoisrespite.org",r:"Statewide",co:["statewide"]},
-  {id:504,c:"childcare",n:"DCFS After-School & Extracurricular Funding",d:"DCFS funds daycare, after-school programs, sports, art, and extracurriculars for eligible youth in care. Ask your caseworker.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
-  {id:505,c:"childcare",n:"Enrichment Funds (Specialized Foster Care)",d:"Extra funds for camp, sporting equipment, clubs, school activities, and trips beyond what the monthly board payment covers.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-  {id:506,c:"childcare",n:"Child Care Resource & Referral (CCR&R)",d:"16 regional agencies across Illinois help you find quality childcare, navigate CCAP, and access local family resources.",p:"877-202-4453",u:"https://www.inccrra.org",r:"Statewide",co:["statewide"]},
-  {id:507,c:"childcare",n:"ASAP Respite Services",d:"Adoption Support & Preservation program offers respite care for adoptive families. Part of the up to $500/year cash benefit.",p:null,u:"https://pathbeyondadoption.illinois.gov/resources.html",r:"Statewide",co:["statewide"]},
-
-  // ─── FOOD & FINANCIAL AID ───
-  {id:600,c:"financial",n:"DCFS Monthly Board Payment",d:"Monthly stipend for every foster child covering food, clothing, shelter, and allowance. Amount varies by child's age and care level.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
-  {id:601,c:"financial",n:"WIC — Women, Infants & Children",d:"Free healthy food (milk, eggs, produce, cereal) for foster children under 5. Foster parents can apply on behalf of the child. EBT card provided.",p:null,u:"https://www.dhs.state.il.us/page.aspx?item=30513",r:"Statewide",co:["statewide"]},
-  {id:602,c:"financial",n:"SNAP / Illinois LINK Card",d:"Supplemental food assistance for eligible families. Foster children's needs may qualify. Also unlocks museum discounts and other perks.",p:null,u:"https://abe.illinois.gov",r:"Statewide",co:["statewide"]},
-  {id:603,c:"financial",n:"YouthCare / Medicaid for Youth in Care",d:"Full medical, dental, and mental health coverage for every child in DCFS care. No cost to foster parents.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-  {id:604,c:"financial",n:"DCFS Nonrecurring Expense Funds",d:"Reimbursement for one-time costs like furniture, special equipment, or supplies not covered by the monthly board payment.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-  {id:605,c:"financial",n:"Adoption & Guardianship Subsidies",d:"Monthly subsidy continues after adoption or guardianship is finalized. May continue to age 21. Legal costs are fully covered by DCFS.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-  {id:606,c:"financial",n:"Education Training Vouchers (ETV)",d:"Federal program providing up to $5,000/year for post-secondary education and training for current and former foster youth.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-  {id:607,c:"financial",n:"TANF — Temporary Assistance",d:"Cash assistance for low-income families. May be available to relative caregivers. Apply through DHS.",p:null,u:"https://www.dhs.state.il.us/page.aspx?item=30358",r:"Statewide",co:["statewide"]},
-  {id:608,c:"financial",n:"Feeding Illinois — Food Pantries",d:"Network of food banks and pantries across all 102 counties. Find your nearest location for free groceries.",p:null,u:"https://feedingillinois.org/get-help/",r:"Statewide",co:["statewide"]},
-  {id:609,c:"financial",n:"Greater Chicago Food Depository",d:"Largest food bank in Chicagoland. Find pantries, soup kitchens, and mobile markets across Cook County.",p:"773-247-3663",u:"https://www.chicagosfoodbank.org/find-food/",r:"Cook County",co:["cook"]},
-  {id:610,c:"financial",n:"Special Service Fees",d:"DCFS can approve extra funds for phone bills, transportation, tutoring, and other services. Ask your caseworker about eligibility.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-
-  // ─── HOUSING & AGING OUT ───
-  {id:700,c:"housing",n:"Youth Housing Assistance Program",d:"Housing advocacy, emergency funding, and transition support for youth aging out of foster care at 18–21.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-  {id:701,c:"housing",n:"DCFS Extended Foster Care (18–21)",d:"Youth can remain in care until age 21 if enrolled in school, working, or have a medical condition. Includes housing, stipend, and services.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-  {id:702,c:"housing",n:"Transitional Living Programs (TLP)",d:"Supervised housing and life skills for youth 17–21 aging out of care. Learn budgeting, cooking, job skills, and independent living.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-  {id:703,c:"housing",n:"FosterClub — Transition Toolkit",d:"Free online tools, checklists, and guides for youth preparing to age out of foster care. Covers housing, finances, health, and more.",p:null,u:"https://www.fosterclub.com/resources",r:"Nationwide",co:["statewide"]},
-  {id:704,c:"housing",n:"iFoster Tech Program — Free Devices",d:"Free smartphones with unlimited data via Federal Lifeline program, plus laptops for college-bound foster youth.",p:null,u:"https://www.ifoster.org",r:"Nationwide",co:["statewide"]},
-  {id:705,c:"housing",n:"Emergency Resource Homes (ERH)",d:"DCFS program: licensed foster parents who accept emergency placements for up to 10 days while permanent homes are found.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare.html",r:"Statewide",co:["statewide"]},
-  {id:706,c:"housing",n:"Midwest Shelter for Homeless Veterans",d:"Housing for former foster youth who are veterans or at risk of homelessness. Wheaton, IL.",p:"630-871-8387",u:null,r:"DuPage County",co:["dupage"]},
-
-  // ─── ADDITIONAL SUPPORT & HEALTH (filling gaps) ───
-  {id:800,c:"support",n:"Allendale Association — Specialized Foster Care",d:"Specialized foster care for children with behavioral/emotional needs. Monthly stipend, enrichment funds, respite, nurse on staff, and training dinners with childcare.",p:null,u:"https://allendale4kids.org/programs-services/community-services/foster-care/",r:"Chicagoland",co:COOK_COLLAR},
-  {id:801,c:"support",n:"Volunteers of America Illinois",d:"Foster care, reunification services, counseling, parent training, crisis intervention, and respite care across Chicago.",p:"312-564-2400",u:"https://www.voaillinois.org/services/child-welfare-services/",r:"Chicago",co:["cook"]},
-  {id:802,c:"support",n:"Center for Youth & Family Solutions",d:"Foster care, counseling, and family support services across Central Illinois. Multiple office locations.",p:null,u:"https://www.cyfsolutions.org",r:"Central IL",co:["peoria","tazewell","woodford","fulton","knox","mclean","mason","logan","marshall","stark"]},
-  {id:803,c:"support",n:"Cunningham Children's Home",d:"Therapeutic foster care, residential treatment, and family services for Central Illinois youth.",p:null,u:"https://www.cunninghamhome.org",r:"Champaign & Central IL",co:["champaign","vermilion","mclean","macon","piatt","ford","douglas","coles"]},
-  {id:804,c:"health",n:"DCFS YouthCare Medical Card",d:"Every child in DCFS care receives a medical card covering doctor visits, prescriptions, dental, vision, therapy, and hospitalization at no cost.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-  {id:805,c:"health",n:"Illinois Poison Center",d:"24/7 poison emergency hotline. Free, confidential. Important for foster parents of toddlers and young children.",p:"1-800-222-1222",u:"https://illinoispoisoncenter.org",r:"Statewide",co:["statewide"]},
-  {id:806,c:"health",n:"Crisis Text Line",d:"Text HOME to 741741 for free 24/7 crisis support via text. Good for older foster youth who prefer texting over calling.",p:null,u:"https://www.crisistextline.org",r:"Nationwide",co:["statewide"]},
-  {id:807,c:"health",n:"NAMI Illinois — Mental Health",d:"National Alliance on Mental Illness Illinois chapter. Free support groups, education programs, and crisis resources for families.",p:null,u:"https://namiillinois.org",r:"Statewide",co:["statewide"]},
-
-  // ─── ADDITIONAL LEGAL ───
-  {id:808,c:"legal",n:"Equip for Equality",d:"Legal advocacy for people with disabilities including foster children with special needs. Free protection and advocacy services.",p:"800-537-2632",u:"https://www.equipforequality.org",r:"Statewide",co:["statewide"]},
-  {id:809,c:"legal",n:"Prairie State Legal Services",d:"Free legal aid for low-income families in Northern and Central Illinois. Family law, benefits, housing, and education rights.",p:null,u:"https://www.pslegal.org",r:"Northern & Central IL",co:["winnebago","boone","carroll","dekalb","jo_daviess","kane","kendall","lee","mchenry","ogle","stephenson","whiteside","bureau","grundy","lasalle","livingston","marshall","putnam","woodford"]},
-
-  // ─── ADDITIONAL EDUCATION ───
-  {id:810,c:"education",n:"Head Start / Early Head Start",d:"Free comprehensive early childhood education for children 0–5 from low-income families including foster families. Available in every county.",p:null,u:"https://eclkc.ohs.acf.hhs.gov/hslc/HeadStartOffices",r:"Statewide",co:["statewide"]},
-  {id:811,c:"education",n:"Illinois Birth to Three Program",d:"Free early intervention services for infants and toddlers with developmental delays. Referrals through your pediatrician or caseworker.",p:"800-323-4769",u:null,r:"Statewide",co:["statewide"]},
-  {id:812,c:"education",n:"Education Training Vouchers (ETV)",d:"Up to $5,000/year for post-secondary education for current and former foster youth ages 16–23.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
-
-  // ─── ADDITIONAL DONATIONS ───
-  {id:813,c:"donations",n:"Cradles to Crayons Chicago",d:"Free clothing, shoes, school supplies, and essentials for children in need. Serves foster families through agency referrals.",p:null,u:"https://www.cradlestocrayons.org/chicago/",r:"Chicagoland",co:COOK_COLLAR},
-  {id:814,c:"donations",n:"Share Our Spare",d:"Connects families who have outgrown baby gear with families who need it. Car seats, strollers, cribs, and more — all free.",p:null,u:"https://www.shareourspare.org",r:"Chicagoland",co:COOK_COLLAR},
-
-  // ─── ADDITIONAL NATIONAL ───
   {id:815,c:"national",n:"Donaldson Adoption Institute",d:"Research, education, and resources to improve adoption practice and policy nationwide.",p:null,u:"https://www.adoptioninstitute.org",r:"Nationwide",co:["statewide"]},
   {id:816,c:"national",n:"National Kinship Alliance",d:"Resources, advocacy, and support specifically for kinship caregivers — grandparents, aunts, uncles, and family members raising children.",p:null,u:"https://www.grandfamilies.org",r:"Nationwide",co:["statewide"]},
   {id:817,c:"national",n:"Jockey Being Family",d:"Post-adoption support including a free helpline, webinars, and connection to local resources for adoptive families.",p:"888-200-4005",u:"https://www.jockeybeingfamily.org",r:"Nationwide",co:["statewide"]},
-
-  // ─── ADDITIONAL PERKS ───
-  {id:818,c:"perks",n:"Cantigny Park — Free Admission",d:"Always free admission to Cantigny Park in Wheaton. Free on first Wednesday of month. Military and LINK card discounts available.",p:null,u:"https://www.cantigny.org",r:"DuPage County",co:["dupage"]},
-  {id:819,c:"perks",n:"Klehm Arboretum — EBT Discount",d:"Discounted admission for EBT/WIC families. 150+ acres of accessible paths, gardens, and nature walks in Rockford.",p:null,u:"https://klehm.org",r:"Winnebago County",co:["winnebago"]},
-  {id:820,c:"perks",n:"Brookfield Zoo — Discounted Days",d:"Reduced or free admission on select days for Illinois residents. LINK card holders get special pricing year-round.",p:null,u:"https://www.czs.org/Brookfield-Zoo",r:"Cook County",co:["cook"]},
-  {id:821,c:"perks",n:"Peoria PlayHouse Children's Museum",d:"Discounted admission for LINK/EBT card holders. Interactive exhibits designed for children birth through age 10.",p:null,u:"https://www.peoriaplayhouse.org",r:"Peoria County",co:["peoria"]},
-  {id:822,c:"perks",n:"Batavia Depot Museum — Free",d:"Always free! History exhibits from 10,000 BC to today's rocket scientists. Great family outing in Kane County.",p:null,u:null,r:"Kane County",co:["kane"]},
-
-  // ─── ADDITIONAL FAITH ───
-  {id:823,c:"faith",n:"Lifeline Children's Services",d:"National Christian adoption and foster care agency with Illinois offices. Provides training, home studies, and wraparound church engagement programs.",p:null,u:"https://lifelinechild.org",r:"Nationwide",co:["statewide"]},
-  {id:824,c:"faith",n:"Bethany Christian Services",d:"One of the largest adoption and foster care agencies in the US. Provides foster parent training, support groups, counseling, and refugee services.",p:null,u:"https://bethany.org",r:"Nationwide",co:["statewide"]},
+  {id:500,c:"childcare",n:"CCAP — Child Care Assistance (Free)",d:"Foster parents get free childcare through CCAP with NO copay. Contact your caseworker to apply. Covers ages 0–12 (special needs to 18).",p:"877-202-4453",u:"https://getchildcareil.org",r:"Statewide",co:["statewide"]},
+  {id:501,c:"childcare",n:"Illinois Cares for Kids",d:"Find quality childcare providers near you who accept CCAP. Search by zip code, filter by hours, type, and ratings.",p:null,u:"https://www.illinoiscaresforkids.org",r:"Statewide",co:["statewide"]},
+  {id:502,c:"childcare",n:"DCFS Respite Care",d:"Short-term relief for foster parents. Request respite hours through your caseworker.",p:"866-368-5204",u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
+  {id:503,c:"childcare",n:"Illinois Respite Coalition",d:"Emergency respite funding for caregivers of children with special needs.",p:null,u:"http://www.illinoisrespite.org",r:"Statewide",co:["statewide"]},
+  {id:504,c:"childcare",n:"DCFS After-School & Extracurricular Funding",d:"DCFS funds daycare, after-school programs, sports, art, and extracurriculars for eligible youth in care.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
+  {id:505,c:"childcare",n:"Enrichment Funds (Specialized Foster Care)",d:"Extra funds for camp, sporting equipment, clubs, school activities, and trips beyond what the monthly board payment covers.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:506,c:"childcare",n:"Child Care Resource & Referral (CCR&R)",d:"16 regional agencies across Illinois help you find quality childcare, navigate CCAP, and access local family resources.",p:"877-202-4453",u:"https://www.inccrra.org",r:"Statewide",co:["statewide"]},
+  {id:507,c:"childcare",n:"ASAP Respite Services",d:"Adoption Support & Preservation program offers respite care for adoptive families. Part of the up to $500/year cash benefit.",p:null,u:"https://pathbeyondadoption.illinois.gov/resources.html",r:"Statewide",co:["statewide"]},
+  {id:600,c:"financial",n:"DCFS Monthly Board Payment",d:"Monthly stipend for every foster child covering food, clothing, shelter, and allowance. Amount varies by child's age and care level.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare/resources-for-current-foster-parents.html",r:"Statewide",co:["statewide"]},
+  {id:601,c:"financial",n:"WIC — Women, Infants & Children",d:"Free healthy food for foster children under 5. Foster parents can apply on behalf of the child.",p:null,u:"https://www.dhs.state.il.us/page.aspx?item=30513",r:"Statewide",co:["statewide"]},
+  {id:602,c:"financial",n:"SNAP / Illinois LINK Card",d:"Supplemental food assistance for eligible families. Also unlocks museum discounts and other perks.",p:null,u:"https://abe.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:603,c:"financial",n:"YouthCare / Medicaid for Youth in Care",d:"Full medical, dental, and mental health coverage for every child in DCFS care. No cost to foster parents.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:604,c:"financial",n:"DCFS Nonrecurring Expense Funds",d:"Reimbursement for one-time costs like furniture, special equipment, or supplies.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:605,c:"financial",n:"Adoption & Guardianship Subsidies",d:"Monthly subsidy continues after adoption or guardianship is finalized. May continue to age 21.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:606,c:"financial",n:"Education Training Vouchers (ETV)",d:"Federal program providing up to $5,000/year for post-secondary education and training for foster youth.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:607,c:"financial",n:"TANF — Temporary Assistance",d:"Cash assistance for low-income families. May be available to relative caregivers.",p:null,u:"https://www.dhs.state.il.us/page.aspx?item=30358",r:"Statewide",co:["statewide"]},
+  {id:608,c:"financial",n:"Feeding Illinois — Food Pantries",d:"Network of food banks and pantries across all 102 counties. Find your nearest location for free groceries.",p:null,u:"https://feedingillinois.org/get-help/",r:"Statewide",co:["statewide"]},
+  {id:609,c:"financial",n:"Greater Chicago Food Depository",d:"Largest food bank in Chicagoland. Find pantries, soup kitchens, and mobile markets across Cook County.",p:"773-247-3663",u:"https://www.chicagosfoodbank.org/find-food/",r:"Cook County",co:["cook"]},
+  {id:610,c:"financial",n:"Special Service Fees",d:"DCFS can approve extra funds for phone bills, transportation, tutoring, and other services. Ask your caseworker.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:700,c:"housing",n:"Youth Housing Assistance Program",d:"Housing advocacy, emergency funding, and transition support for youth aging out of foster care at 18–21.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:701,c:"housing",n:"DCFS Extended Foster Care (18–21)",d:"Youth can remain in care until age 21 if enrolled in school, working, or have a medical condition.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:702,c:"housing",n:"Transitional Living Programs (TLP)",d:"Supervised housing and life skills for youth 17–21 aging out of care.",p:null,u:"https://dcfs.illinois.gov",r:"Statewide",co:["statewide"]},
+  {id:703,c:"housing",n:"FosterClub — Transition Toolkit",d:"Free online tools, checklists, and guides for youth preparing to age out of foster care.",p:null,u:"https://www.fosterclub.com/resources",r:"Nationwide",co:["statewide"]},
+  {id:704,c:"housing",n:"iFoster Tech Program — Free Devices",d:"Free smartphones with unlimited data via Federal Lifeline program, plus laptops for college-bound foster youth.",p:null,u:"https://www.ifoster.org",r:"Nationwide",co:["statewide"]},
+  {id:705,c:"housing",n:"Emergency Resource Homes (ERH)",d:"DCFS program: licensed foster parents who accept emergency placements for up to 10 days.",p:null,u:"https://dcfs.illinois.gov/loving-homes/fostercare.html",r:"Statewide",co:["statewide"]},
+  {id:706,c:"housing",n:"Midwest Shelter for Homeless Veterans",d:"Housing for former foster youth who are veterans or at risk of homelessness. Wheaton, IL.",p:"630-871-8387",u:null,r:"DuPage County",co:["dupage"]},
 ];
-
-
-// ─── SMART EVENT ENGINE ───
-// Generates events dynamically based on today's date.
-// Recurring events auto-roll forward every month/quarter/year.
-// No manual updates needed — the calendar stays fresh forever.
-
 function generateEvents() {
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  const twoMonthsOut = new Date(today);
-  twoMonthsOut.setMonth(twoMonthsOut.getMonth() + 2);
-  twoMonthsOut.setDate(twoMonthsOut.getDate() + 7); // slight buffer
-
-  // Helper: get Nth weekday of a month (e.g., 3rd Thursday)
-  function nthWeekday(year, month, weekday, n) {
-    const first = new Date(year, month, 1);
-    let day = 1 + ((weekday - first.getDay() + 7) % 7);
-    day += (n - 1) * 7;
-    if (day > new Date(year, month + 1, 0).getDate()) return null;
-    return new Date(year, month, day);
-  }
-
-  // Helper: last weekday of a month
-  function lastWeekday(year, month, weekday) {
-    const last = new Date(year, month + 1, 0);
-    const diff = (last.getDay() - weekday + 7) % 7;
-    return new Date(year, month, last.getDate() - diff);
-  }
-
-  // Helper: format date as YYYY-MM-DD
-  function fmt(d) {
-    return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-  }
-
-  // Generate dates for each month in the window
-  const months = [];
-  let cursor = new Date(today.getFullYear(), today.getMonth(), 1);
-  while (cursor <= twoMonthsOut) {
-    months.push({ y: cursor.getFullYear(), m: cursor.getMonth() });
-    cursor.setMonth(cursor.getMonth() + 1);
-  }
-
-  const events = [];
-  let eid = 1;
-
-  // ──────────────────────────────────────────
-  // MONTHLY RECURRING EVENTS (happen every month)
-  // ──────────────────────────────────────────
+  const today = new Date(); today.setHours(0,0,0,0);
+  const twoMonthsOut = new Date(today); twoMonthsOut.setMonth(twoMonthsOut.getMonth() + 2); twoMonthsOut.setDate(twoMonthsOut.getDate() + 7);
+  function nthWeekday(year, month, weekday, n) { const first = new Date(year, month, 1); let day = 1 + ((weekday - first.getDay() + 7) % 7); day += (n - 1) * 7; if (day > new Date(year, month + 1, 0).getDate()) return null; return new Date(year, month, day); }
+  function lastWeekday(year, month, weekday) { const last = new Date(year, month + 1, 0); const diff = (last.getDay() - weekday + 7) % 7; return new Date(year, month, last.getDate() - diff); }
+  function fmt(d) { return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  const months = []; let cursor = new Date(today.getFullYear(), today.getMonth(), 1);
+  while (cursor <= twoMonthsOut) { months.push({ y: cursor.getFullYear(), m: cursor.getMonth() }); cursor.setMonth(cursor.getMonth() + 1); }
+  const events = []; let eid = 1;
 
   const monthlyTemplates = [
-    // 3rd Wednesday — LCFS Foster Parent Info Meeting
-    { weekday:3, nth:3, title:"Foster Parent Info Meeting — Cook County", org:"Lutheran Child & Family Services", time:"5:00 PM – 6:30 PM", loc:"Grace Lutheran Church, River Forest", desc:"Learn about becoming a foster parent. No obligation. Open to everyone curious about fostering. Contact Leondra at (708) 771-7180.", co:["cook"], cat:"support", url:"https://lcfs.org/program/foster-care/" },
-    // 3rd Thursday — Baby Fold Support Group
-    { weekday:4, nth:3, title:"The Baby Fold Support Group", org:"The Baby Fold", time:"6:30 PM – 8:00 PM", loc:"Normal, IL", desc:"Monthly support group for foster and adoptive parents in Central Illinois. Childcare provided. All welcome.", co:["mclean","champaign","sangamon","macon","tazewell","dewitt","logan","piatt"], cat:"support", url:null },
-    // 2nd Tuesday — Catholic Charities Adoption Group
-    { weekday:2, nth:2, title:"Catholic Charities Adoption Support Group", org:"Catholic Charities", time:"6:30 PM – 8:00 PM", loc:"Chicago (Archdiocese Office)", desc:"Free monthly support group open to all adoptive and foster families. Share experiences, resources, and encouragement.", co:["cook"], cat:"faith", url:null },
-    // 1st Saturday — James Project Closet Volunteer Day
-    { weekday:6, nth:1, title:"Closet 1:27 Volunteer Day", org:"The James Project", time:"9:00 AM – 12:00 PM", loc:"Springfield, IL", desc:"Help sort clothing, pack hygiene kits, and prepare beds for newly placed foster children in Sangamon County. Drop-ins welcome.", co:["sangamon"], cat:"donations", url:"https://thejamesproject127.com" },
-    // 2nd Saturday — Mimi's House Resource Day
-    { weekday:6, nth:2, title:"Mimi's House Resource Day", org:"Mimi's House", time:"10:00 AM – 1:00 PM", loc:"Mundelein, IL", desc:"Monthly resource day for Lake County foster families. Pick up clothing, diapers, car seats, and essentials. Referral from caseworker.", co:["lake","cook"], cat:"donations", url:"https://mimishousefac.org" },
-    // Last Friday — Second Nurture Respite Night
+    { weekday:3, nth:3, title:"Foster Parent Info Meeting — Cook County", org:"Lutheran Child & Family Services", time:"5:00 PM – 6:30 PM", loc:"Grace Lutheran Church, River Forest", desc:"Learn about becoming a foster parent. No obligation. Open to everyone curious about fostering.", co:["cook"], cat:"support", url:"https://lcfs.org/program/foster-care/" },
+    { weekday:4, nth:3, title:"The Baby Fold Support Group", org:"The Baby Fold", time:"6:30 PM – 8:00 PM", loc:"Normal, IL", desc:"Monthly support group for foster and adoptive parents in Central Illinois. Childcare provided.", co:["mclean","champaign","sangamon","macon","tazewell","dewitt","logan","piatt"], cat:"support", url:null },
+    { weekday:2, nth:2, title:"Catholic Charities Adoption Support Group", org:"Catholic Charities", time:"6:30 PM – 8:00 PM", loc:"Chicago (Archdiocese Office)", desc:"Free monthly support group open to all adoptive and foster families.", co:["cook"], cat:"faith", url:null },
+    { weekday:6, nth:1, title:"Closet 1:27 Volunteer Day", org:"The James Project", time:"9:00 AM – 12:00 PM", loc:"Springfield, IL", desc:"Help sort clothing, pack hygiene kits, and prepare beds for newly placed foster children in Sangamon County.", co:["sangamon"], cat:"donations", url:"https://thejamesproject127.com" },
+    { weekday:6, nth:2, title:"Mimi's House Resource Day", org:"Mimi's House", time:"10:00 AM – 1:00 PM", loc:"Mundelein, IL", desc:"Monthly resource day for Lake County foster families. Pick up clothing, diapers, car seats, and essentials.", co:["lake","cook"], cat:"donations", url:"https://mimishousefac.org" },
     { weekday:5, nth:"last", title:"Foster Family Respite Night", org:"Second Nurture", time:"5:30 PM – 9:00 PM", loc:"Chicagoland (rotating location)", desc:"Free respite evening! Drop off your kids for a supervised fun night while foster parents enjoy a well-deserved break.", co:COOK_COLLAR, cat:"support", url:"https://www.2nurture.org" },
-    // 2nd Wednesday — Let It Be Us Online Info Session
-    { weekday:3, nth:2, title:"Let It Be Us — Online Info Session", org:"Let It Be Us", time:"10:00 AM – 11:30 AM", loc:"Virtual (Zoom)", desc:"Free monthly webinar about obtaining a license to foster or adopt in Illinois. Open to everyone statewide. No obligation.", co:["statewide"], cat:"dcfs", url:"https://letitbeus.org" },
-    // 3rd Tuesday — Restore Network Parent Coach Session
-    { weekday:2, nth:3, title:"Restore Network Parent Coach Session", org:"The Restore Network", time:"7:00 PM – 8:30 PM", loc:"Virtual (Zoom)", desc:"Free monthly parent coaching for foster families. Learn trauma-informed strategies using Trust-Based Relational Intervention (TBRI).", co:["statewide"], cat:"faith", url:"https://therestorenetwork.org/trauma-informed-resources/" },
-    // 1st Wednesday — MSI Free Day (EBT/WIC)
-    { weekday:3, nth:1, title:"Museum of Science & Industry — Free Day", org:"MSI Chicago", time:"9:30 AM – 4:00 PM", loc:"5700 S DuSable Lake Shore Dr, Chicago", desc:"Free entry for families with EBT/WIC cards — 2 adults + up to 6 kids. Over 400,000 sq ft of hands-on STEM exhibits!", co:["cook"], cat:"perks", url:"https://www.msichicago.org" },
-    // 1st Tuesday — Art Institute Free (IL residents)
-    { weekday:2, nth:1, title:"Art Institute of Chicago — Free Tuesday", org:"Art Institute of Chicago", time:"11:00 AM – 6:00 PM", loc:"111 S Michigan Ave, Chicago", desc:"Free admission for all Illinois residents every first Tuesday. Explore world-class art with the whole family.", co:["cook"], cat:"perks", url:"https://www.artic.edu" },
-    // 2nd Thursday — iFoster Resource Webinar
-    { weekday:4, nth:2, title:"iFoster Resource Webinar", org:"iFoster", time:"12:00 PM – 1:00 PM", loc:"Virtual", desc:"Monthly webinar showing how to access 500+ free resources, discounts, and benefits through your free iFoster membership.", co:["statewide"], cat:"perks", url:"https://www.ifoster.org" },
-    // 4th Thursday — Family Core Peoria Support Group
-    { weekday:4, nth:4, title:"Family Core Foster Support Group", org:"Family Core", time:"6:00 PM – 7:30 PM", loc:"Peoria, IL", desc:"Monthly gathering for Peoria-region foster and adoptive parents. Peer support, guest speakers, and resource sharing.", co:["peoria","tazewell","woodford","mclean","marshall","knox","fulton"], cat:"support", url:null },
-    // 1st Thursday — Brightpoint Parent Partner Check-In
-    { weekday:4, nth:1, title:"Brightpoint Parent Partner Check-In", org:"Brightpoint", time:"10:00 AM – 11:30 AM", loc:"Virtual / Northern IL Offices", desc:"Monthly mentorship check-in with experienced Brightpoint parent partners. Get one-on-one guidance and connect with peers.", co:BRIGHTPOINT.slice(0,6), cat:"support", url:"https://www.brightpoint.org" },
-    // 3rd Saturday — Spero Family Services Coffee & Connect
-    { weekday:6, nth:3, title:"Spero Coffee & Connect", org:"Spero Family Services", time:"9:30 AM – 11:00 AM", loc:"Mt. Vernon, IL", desc:"Monthly informal coffee gathering for Southern Illinois foster families. Share stories, get support, build community.", co:SOUTH_IL.slice(0,10), cat:"support", url:"https://www.sperofs.org" },
-    // 2nd Monday — Caritas Family Solutions Support Meeting
-    { weekday:1, nth:2, title:"Caritas Family Support Meeting", org:"Caritas Family Solutions", time:"6:00 PM – 7:30 PM", loc:"Belleville, IL", desc:"Monthly support meeting for foster and adoptive families across Southern and Central Illinois. All are welcome.", co:["st_clair","madison","bond","clinton","monroe"], cat:"support", url:"https://caritasfamilysolutions.org" },
-    // 4th Saturday — Little City Family Activity Day
-    { weekday:6, nth:4, title:"Little City Family Activity Day", org:"Little City", time:"10:00 AM – 1:00 PM", loc:"Palatine / Matteson, IL", desc:"Monthly activity day for Little City foster families. Arts, crafts, games, and supervised fun for kids while parents connect.", co:["cook","will"], cat:"support", url:"https://littlecity.org" },
-    // Last Wednesday — UCAN Nurturing Parent Session
-    { weekday:3, nth:"last", title:"UCAN Nurturing Parent Session", org:"UCAN", time:"6:00 PM – 7:30 PM", loc:"Chicago", desc:"Monthly sessions for foster parents of young children covering child development, trauma responses, and peer support strategies.", co:["cook"], cat:"education", url:"https://ucanchicago.org" },
-    // 1st Monday — DuPage Family Focus Parent Café
+    { weekday:3, nth:2, title:"Let It Be Us — Online Info Session", org:"Let It Be Us", time:"10:00 AM – 11:30 AM", loc:"Virtual (Zoom)", desc:"Free monthly webinar about obtaining a license to foster or adopt in Illinois.", co:["statewide"], cat:"dcfs", url:"https://letitbeus.org" },
+    { weekday:2, nth:3, title:"Restore Network Parent Coach Session", org:"The Restore Network", time:"7:00 PM – 8:30 PM", loc:"Virtual (Zoom)", desc:"Free monthly parent coaching for foster families. Learn trauma-informed strategies using TBRI.", co:["statewide"], cat:"faith", url:"https://therestorenetwork.org/trauma-informed-resources/" },
+    { weekday:3, nth:1, title:"Museum of Science & Industry — Free Day", org:"MSI Chicago", time:"9:30 AM – 4:00 PM", loc:"5700 S DuSable Lake Shore Dr, Chicago", desc:"Free entry for families with EBT/WIC cards — 2 adults + up to 6 kids.", co:["cook"], cat:"perks", url:"https://www.msichicago.org" },
+    { weekday:2, nth:1, title:"Art Institute of Chicago — Free Tuesday", org:"Art Institute of Chicago", time:"11:00 AM – 6:00 PM", loc:"111 S Michigan Ave, Chicago", desc:"Free admission for all Illinois residents every first Tuesday.", co:["cook"], cat:"perks", url:"https://www.artic.edu" },
+    { weekday:4, nth:2, title:"iFoster Resource Webinar", org:"iFoster", time:"12:00 PM – 1:00 PM", loc:"Virtual", desc:"Monthly webinar showing how to access 500+ free resources through your free iFoster membership.", co:["statewide"], cat:"perks", url:"https://www.ifoster.org" },
+    { weekday:4, nth:4, title:"Family Core Foster Support Group", org:"Family Core", time:"6:00 PM – 7:30 PM", loc:"Peoria, IL", desc:"Monthly gathering for Peoria-region foster and adoptive parents. Peer support and resource sharing.", co:["peoria","tazewell","woodford","mclean","marshall","knox","fulton"], cat:"support", url:null },
+    { weekday:4, nth:1, title:"Brightpoint Parent Partner Check-In", org:"Brightpoint", time:"10:00 AM – 11:30 AM", loc:"Virtual / Northern IL Offices", desc:"Monthly mentorship check-in with experienced Brightpoint parent partners.", co:BRIGHTPOINT.slice(0,6), cat:"support", url:"https://www.brightpoint.org" },
+    { weekday:6, nth:3, title:"Spero Coffee & Connect", org:"Spero Family Services", time:"9:30 AM – 11:00 AM", loc:"Mt. Vernon, IL", desc:"Monthly informal coffee gathering for Southern Illinois foster families.", co:SOUTH_IL.slice(0,10), cat:"support", url:"https://www.sperofs.org" },
+    { weekday:1, nth:2, title:"Caritas Family Support Meeting", org:"Caritas Family Solutions", time:"6:00 PM – 7:30 PM", loc:"Belleville, IL", desc:"Monthly support meeting for foster and adoptive families across Southern and Central Illinois.", co:["st_clair","madison","bond","clinton","monroe"], cat:"support", url:"https://caritasfamilysolutions.org" },
+    { weekday:6, nth:4, title:"Little City Family Activity Day", org:"Little City", time:"10:00 AM – 1:00 PM", loc:"Palatine / Matteson, IL", desc:"Monthly activity day for Little City foster families.", co:["cook","will"], cat:"support", url:"https://littlecity.org" },
+    { weekday:3, nth:"last", title:"UCAN Nurturing Parent Session", org:"UCAN", time:"6:00 PM – 7:30 PM", loc:"Chicago", desc:"Monthly sessions for foster parents of young children covering child development, trauma, and peer support.", co:["cook"], cat:"education", url:"https://ucanchicago.org" },
     { weekday:1, nth:1, title:"Family Focus Parent Café", org:"Family Focus DuPage", time:"10:00 AM – 11:30 AM", loc:"Wheaton, IL", desc:"Monthly Parent Café for foster and adoptive families. Coffee, discussion, and community resources. Childcare available.", co:["dupage"], cat:"support", url:"https://www.family-focus.org/center/dupage/" },
-    // 3rd Monday — CASA Kane County Info Night
-    { weekday:1, nth:3, title:"CASA Kane County Info Night", org:"CASA Kane County", time:"6:00 PM – 7:00 PM", loc:"Geneva, IL", desc:"Learn how to become a Court Appointed Special Advocate for children in Kane County foster care. Monthly info session.", co:["kane"], cat:"legal", url:"https://kanecountyconnects.com" },
-    // 2nd Friday — Lincoln Park Zoo Free (always free but special foster family meetup)
-    { weekday:5, nth:2, title:"Foster Family Zoo Meetup", org:"Community Organized", time:"10:00 AM – 1:00 PM", loc:"Lincoln Park Zoo, Chicago", desc:"Monthly informal meetup for foster families at Lincoln Park Zoo (always free!). Meet at the main gate. Bring a picnic!", co:["cook","dupage","lake","will","kane"], cat:"perks", url:"https://www.lpzoo.org" },
+    { weekday:1, nth:3, title:"CASA Kane County Info Night", org:"CASA Kane County", time:"6:00 PM – 7:00 PM", loc:"Geneva, IL", desc:"Learn how to become a Court Appointed Special Advocate for children in Kane County.", co:["kane"], cat:"legal", url:"https://kanecountyconnects.com" },
+    { weekday:5, nth:2, title:"Foster Family Zoo Meetup", org:"Community Organized", time:"10:00 AM – 1:00 PM", loc:"Lincoln Park Zoo, Chicago", desc:"Monthly informal meetup for foster families at Lincoln Park Zoo (always free!). Meet at the main gate.", co:["cook","dupage","lake","will","kane"], cat:"perks", url:"https://www.lpzoo.org" },
   ];
 
-  // Generate monthly recurring events
-  months.forEach(({y, m}) => {
-    monthlyTemplates.forEach((tmpl, ti) => {
-      let d;
-      if (tmpl.nth === "last") {
-        d = lastWeekday(y, m, tmpl.weekday);
-      } else {
-        d = nthWeekday(y, m, tmpl.weekday, tmpl.nth);
-      }
-      if (d && d >= today && d <= twoMonthsOut) {
-        events.push({
-          id: "r" + eid++,
-          title: tmpl.title,
-          org: tmpl.org,
-          date: fmt(d),
-          time: tmpl.time,
-          loc: tmpl.loc,
-          desc: tmpl.desc,
-          co: tmpl.co,
-          cat: tmpl.cat,
-          url: tmpl.url
-        });
-      }
-    });
-  });
-
-  // ──────────────────────────────────────────
-  // QUARTERLY EVENTS (every 3 months)
-  // ──────────────────────────────────────────
+  months.forEach(({y, m}) => { monthlyTemplates.forEach(tmpl => {
+    let d; if (tmpl.nth === "last") { d = lastWeekday(y, m, tmpl.weekday); } else { d = nthWeekday(y, m, tmpl.weekday, tmpl.nth); }
+    if (d && d >= today && d <= twoMonthsOut) { events.push({ id: "r" + eid++, title: tmpl.title, org: tmpl.org, date: fmt(d), time: tmpl.time, loc: tmpl.loc, desc: tmpl.desc, co: tmpl.co, cat: tmpl.cat, url: tmpl.url }); }
+  }); });
 
   const quarterlyTemplates = [
-    { months:[0,3,6,9], nth:2, weekday:6, title:"Restore Network Foster Family Retreat", org:"The Restore Network", time:"9:00 AM – 3:00 PM", loc:"Life Community Church, Columbia", desc:"Quarterly retreat with trauma-informed training (TBRI), fellowship, meals, and childcare for foster families in the Metro East.", co:["monroe","madison","st_clair","bond","clinton","macoupin"], cat:"faith", url:"https://therestorenetwork.org" },
-    { months:[1,4,7,10], nth:1, weekday:6, title:"IL Foster Closet — Quarterly Distribution", org:"IL Foster Closet", time:"10:00 AM – 2:00 PM", loc:"Various IL Locations", desc:"Quarterly large-scale distribution event. Free clothing, shoes, toys, blankets, and essentials for foster children statewide.", co:["statewide"], cat:"donations", url:"https://www.ilfostercloset.com" },
-    { months:[2,5,8,11], nth:3, weekday:6, title:"CASA Volunteer Training — New Session", org:"Illinois CASA", time:"9:00 AM – 4:00 PM", loc:"Multiple IL Counties", desc:"Quarterly CASA volunteer training. Become a Court Appointed Special Advocate for children in foster care across Illinois.", co:["statewide"], cat:"legal", url:"https://illinoiscasa.org" },
-    { months:[0,3,6,9], nth:1, weekday:6, title:"Together We Rise — Bike Build", org:"Together We Rise", time:"10:00 AM – 1:00 PM", loc:"Chicagoland (rotating)", desc:"Quarterly volunteer event assembling bikes for children entering foster care. All ages welcome — no experience needed!", co:COOK_COLLAR, cat:"donations", url:"https://www.togetherwerise.org" },
-    { months:[1,4,7,10], nth:3, weekday:5, title:"Adoptive Families Today — Quarterly Gathering", org:"Adoptive Families Today", time:"6:30 PM – 8:30 PM", loc:"Palatine, IL", desc:"Quarterly meetup for adoptive and foster families. Featured speaker, breakout discussion, resource tables, and refreshments.", co:["statewide"], cat:"support", url:"https://adoptuskids.org" },
+    { months:[0,3,6,9], nth:2, weekday:6, title:"Restore Network Foster Family Retreat", org:"The Restore Network", time:"9:00 AM – 3:00 PM", loc:"Life Community Church, Columbia", desc:"Quarterly retreat with trauma-informed training (TBRI), fellowship, meals, and childcare.", co:["monroe","madison","st_clair","bond","clinton","macoupin"], cat:"faith", url:"https://therestorenetwork.org" },
+    { months:[1,4,7,10], nth:1, weekday:6, title:"IL Foster Closet — Quarterly Distribution", org:"IL Foster Closet", time:"10:00 AM – 2:00 PM", loc:"Various IL Locations", desc:"Quarterly large-scale distribution event. Free clothing, shoes, toys, blankets, and essentials.", co:["statewide"], cat:"donations", url:"https://www.ilfostercloset.com" },
+    { months:[2,5,8,11], nth:3, weekday:6, title:"CASA Volunteer Training — New Session", org:"Illinois CASA", time:"9:00 AM – 4:00 PM", loc:"Multiple IL Counties", desc:"Quarterly CASA volunteer training. Become a Court Appointed Special Advocate.", co:["statewide"], cat:"legal", url:"https://illinoiscasa.org" },
+    { months:[0,3,6,9], nth:1, weekday:6, title:"Together We Rise — Bike Build", org:"Together We Rise", time:"10:00 AM – 1:00 PM", loc:"Chicagoland (rotating)", desc:"Quarterly volunteer event assembling bikes for children entering foster care.", co:COOK_COLLAR, cat:"donations", url:"https://www.togetherwerise.org" },
+    { months:[1,4,7,10], nth:3, weekday:5, title:"Adoptive Families Today — Quarterly Gathering", org:"Adoptive Families Today", time:"6:30 PM – 8:30 PM", loc:"Palatine, IL", desc:"Quarterly meetup with featured speaker, breakout discussion, resource tables.", co:["statewide"], cat:"support", url:"https://adoptuskids.org" },
   ];
 
-  quarterlyTemplates.forEach(tmpl => {
-    months.forEach(({y, m}) => {
-      if (!tmpl.months.includes(m)) return;
-      const d = nthWeekday(y, m, tmpl.weekday, tmpl.nth);
-      if (d && d >= today && d <= twoMonthsOut) {
-        events.push({
-          id: "q" + eid++,
-          title: tmpl.title,
-          org: tmpl.org,
-          date: fmt(d),
-          time: tmpl.time,
-          loc: tmpl.loc,
-          desc: tmpl.desc,
-          co: tmpl.co,
-          cat: tmpl.cat,
-          url: tmpl.url
-        });
-      }
-    });
-  });
-
-  // ──────────────────────────────────────────
-  // ANNUAL / SEASONAL EVENTS (tied to specific months)
-  // ──────────────────────────────────────────
+  quarterlyTemplates.forEach(tmpl => { months.forEach(({y, m}) => {
+    if (!tmpl.months.includes(m)) return;
+    const d = nthWeekday(y, m, tmpl.weekday, tmpl.nth);
+    if (d && d >= today && d <= twoMonthsOut) { events.push({ id: "q" + eid++, title: tmpl.title, org: tmpl.org, date: fmt(d), time: tmpl.time, loc: tmpl.loc, desc: tmpl.desc, co: tmpl.co, cat: tmpl.cat, url: tmpl.url }); }
+  }); });
 
   const annualTemplates = [
-    // May — National Foster Care Month (full month)
-    { month:4, day:1, title:"National Foster Care Month Kickoff", org:"Illinois DCFS", time:"All Day", loc:"Statewide", desc:"May is National Foster Care Month! Watch for local recognition events, supply drives, and appreciation activities across all 102 counties.", co:["statewide"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
-    // May — Foster Care Awareness Walk
-    { month:4, weekday:6, nth:1, title:"Foster Care Awareness Walk", org:"DCFS & Community Partners", time:"9:00 AM – 12:00 PM", loc:"Grant Park, Chicago", desc:"Annual awareness walk during National Foster Care Month. Free T-shirts, inspiring speakers, resource fair, and family activities.", co:["cook"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
-    // May — Foster Parent Appreciation Dinner (Peoria)
-    { month:4, weekday:6, nth:2, title:"Foster Parent Appreciation Dinner — Peoria", org:"DCFS Region 2", time:"6:00 PM – 9:00 PM", loc:"Peoria, IL", desc:"Annual dinner honoring foster parents in the Peoria region. Awards, speakers, and celebration. RSVP through your caseworker.", co:["peoria","tazewell","woodford","knox","fulton","marshall"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
-    // May — Give STL Day
-    { month:4, day:7, title:"Give STL Day — Foster Care Fundraiser", org:"Foster & Adoptive Care Coalition", time:"All Day (Online)", loc:"Online — St. Louis & Illinois", desc:"Annual 24-hour online giving event benefiting foster children in IL & MO communities. Every dollar directly supports kids in care.", co:["statewide","st_clair","madison"], cat:"national", url:"https://www.foster-adopt.org/events/" },
-    // May — Kids Bowl Free Summer Kickoff
-    { month:4, day:1, title:"Kids Bowl Free — Summer Registration Opens", org:"Kids Bowl Free", time:"Varies", loc:"Participating IL Bowling Centers", desc:"Summer registration opens! Kids can bowl 2 free games per day all summer at participating centers. Sign up at kidsbowlfree.com.", co:["statewide"], cat:"perks", url:"https://www.kidsbowlfree.com" },
-    // April — One Family Appreciation Picnic
-    { month:3, weekday:6, nth:3, title:"Foster Family Appreciation Picnic", org:"One Family Illinois", time:"11:00 AM – 3:00 PM", loc:"Lockport, IL", desc:"Annual spring picnic celebrating foster and adoptive families. Food, games, resource tables, and community building.", co:["cook","will"], cat:"support", url:"https://www.onefamilyillinois.org" },
-    // April — Little City Open House
-    { month:3, weekday:6, nth:1, title:"Little City Foster Care Open House", org:"Little City", time:"10:00 AM – 1:00 PM", loc:"Little City — Matteson Office", desc:"Annual open house. Meet the team, learn about foster care, and explore how you can help children with special needs.", co:["cook","will"], cat:"support", url:"https://littlecity.org" },
-    // November — National Adoption Month
-    { month:10, day:1, title:"National Adoption Month Kickoff", org:"Illinois DCFS", time:"All Day", loc:"Statewide", desc:"November is National Adoption Month! Celebrate finalized adoptions, attend Heart Gallery events, and learn about adopting from foster care.", co:["statewide"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
-    // November — Adoption Day Celebrations
-    { month:10, weekday:6, nth:3, title:"National Adoption Day Celebrations", org:"Illinois Courts & DCFS", time:"10:00 AM – 2:00 PM", loc:"Courthouses Statewide", desc:"Courts across Illinois finalize adoptions and celebrate families formed through foster care. Attend to support newly adopted families!", co:["statewide"], cat:"dcfs", url:"https://www.nationaladoptionday.org" },
-    // September — Kinship Care Month
-    { month:8, day:1, title:"Kinship Care Month", org:"Illinois DCFS", time:"All Day", loc:"Statewide", desc:"September recognizes kinship caregivers — grandparents, aunts, uncles — who step up for children. See local events and resources for relative caregivers.", co:["statewide"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
-    // February — Adoption & Foster Friendly Schools Webinar
-    { month:1, weekday:2, nth:4, title:"Adoption & Foster Friendly Schools Webinar", org:"U of I School of Social Work", time:"12:00 PM – 1:00 PM", loc:"Virtual", desc:"Annual webinar training educators on adoption, foster care, kinship care, and the impact of early loss and disrupted attachment on students.", co:["statewide"], cat:"education", url:"https://socialwork.illinois.edu" },
-    // June — Summer Reading Program Kickoff
-    { month:5, day:1, title:"Summer Reading Programs Begin", org:"Various IL Libraries", time:"Varies by library", loc:"Local Libraries Statewide", desc:"Libraries across Illinois kick off summer reading programs with prizes, activities, and BookIt! pizza rewards. Great free fun for foster families!", co:["statewide"], cat:"perks", url:"https://www.bookitprogram.com" },
-    // August — Back to School Supply Drives
-    { month:7, weekday:6, nth:2, title:"Back-to-School Supply Drive", org:"Multiple Organizations", time:"10:00 AM – 2:00 PM", loc:"Various IL Locations", desc:"Annual back-to-school drives providing free backpacks, supplies, and clothing for foster children. Check local organizations for specific locations.", co:["statewide"], cat:"donations", url:"https://www.ifoster.org" },
-    // December — James Project Christmas Party
-    { month:11, weekday:6, nth:2, title:"Foster Family Christmas Party", org:"The James Project & Cherry Hills Church", time:"10:00 AM – 1:00 PM", loc:"Cherry Hills Church, Springfield", desc:"Annual Christmas party for all Sangamon County foster families. Gifts for every child, food, activities, and holiday joy.", co:["sangamon"], cat:"faith", url:"https://thejamesproject127.com" },
-    // December — Holiday Comfort Case Distribution
-    { month:11, weekday:6, nth:1, title:"Holiday Comfort Case Distribution", org:"Comfort Cases & Partners", time:"10:00 AM – 2:00 PM", loc:"Various IL Locations", desc:"Annual holiday distribution of backpacks with comfort items, pajamas, books, and hygiene products for children entering foster care.", co:["statewide"], cat:"donations", url:"https://www.comfortcases.org" },
-    // October — Restore Network Gala
-    { month:9, weekday:5, nth:3, title:"Restore Network Annual Fundraiser", org:"The Restore Network", time:"6:00 PM – 9:00 PM", loc:"Alton / Edwardsville, IL", desc:"Annual fundraiser supporting foster family recruitment and trauma-informed training across Metro East Illinois. Dinner, auction, and inspiring stories.", co:["madison","st_clair","monroe","bond","clinton","macoupin","jersey"], cat:"faith", url:"https://therestorenetwork.org" },
-    // March — Spring Brightpoint Fun Day
-    { month:2, weekday:6, nth:2, title:"Brightpoint Foster Family Fun Day", org:"Brightpoint", time:"10:00 AM – 2:00 PM", loc:"Various Northern IL Locations", desc:"Spring family event with activities, food, bounce houses, and resource sharing for current Brightpoint foster families.", co:BRIGHTPOINT.slice(0,6), cat:"support", url:"https://www.brightpoint.org" },
-    // July — Summer Splash Day
-    { month:6, weekday:6, nth:3, title:"Foster Family Summer Splash", org:"Community Partners", time:"11:00 AM – 3:00 PM", loc:"Various IL Parks & Pools", desc:"Free summer pool and splash pad day for foster families. Bring towels and sunscreen! Check local organizations for locations.", co:["statewide"], cat:"perks", url:null },
-    // January — New Year New Foster Families Info Fair
-    { month:0, weekday:6, nth:3, title:"New Year, New Foster Families Info Fair", org:"Let It Be Us & DCFS", time:"10:00 AM – 2:00 PM", loc:"Virtual & Springfield, IL", desc:"Kick off the new year by learning about foster care. Info fair with multiple agencies, Q&A, and resources for prospective foster families.", co:["statewide"], cat:"dcfs", url:"https://letitbeus.org" },
+    { month:4, day:1, title:"National Foster Care Month Kickoff", org:"Illinois DCFS", time:"All Day", loc:"Statewide", desc:"May is National Foster Care Month! Watch for local recognition events and supply drives.", co:["statewide"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
+    { month:4, weekday:6, nth:1, title:"Foster Care Awareness Walk", org:"DCFS & Community Partners", time:"9:00 AM – 12:00 PM", loc:"Grant Park, Chicago", desc:"Annual awareness walk during National Foster Care Month.", co:["cook"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
+    { month:4, weekday:6, nth:2, title:"Foster Parent Appreciation Dinner — Peoria", org:"DCFS Region 2", time:"6:00 PM – 9:00 PM", loc:"Peoria, IL", desc:"Annual dinner honoring foster parents in the Peoria region.", co:["peoria","tazewell","woodford","knox","fulton","marshall"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
+    { month:4, day:7, title:"Give STL Day — Foster Care Fundraiser", org:"Foster & Adoptive Care Coalition", time:"All Day (Online)", loc:"Online — St. Louis & Illinois", desc:"Annual 24-hour online giving event benefiting foster children.", co:["statewide","st_clair","madison"], cat:"national", url:"https://www.foster-adopt.org/events/" },
+    { month:4, day:1, title:"Kids Bowl Free — Summer Registration Opens", org:"Kids Bowl Free", time:"Varies", loc:"Participating IL Bowling Centers", desc:"Summer registration opens! Kids can bowl 2 free games per day all summer.", co:["statewide"], cat:"perks", url:"https://www.kidsbowlfree.com" },
+    { month:3, weekday:6, nth:3, title:"Foster Family Appreciation Picnic", org:"One Family Illinois", time:"11:00 AM – 3:00 PM", loc:"Lockport, IL", desc:"Annual spring picnic celebrating foster and adoptive families.", co:["cook","will"], cat:"support", url:"https://www.onefamilyillinois.org" },
+    { month:3, weekday:6, nth:1, title:"Little City Foster Care Open House", org:"Little City", time:"10:00 AM – 1:00 PM", loc:"Little City — Matteson Office", desc:"Annual open house. Meet the team, learn about foster care.", co:["cook","will"], cat:"support", url:"https://littlecity.org" },
+    { month:10, day:1, title:"National Adoption Month Kickoff", org:"Illinois DCFS", time:"All Day", loc:"Statewide", desc:"November is National Adoption Month! Celebrate finalized adoptions.", co:["statewide"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
+    { month:10, weekday:6, nth:3, title:"National Adoption Day Celebrations", org:"Illinois Courts & DCFS", time:"10:00 AM – 2:00 PM", loc:"Courthouses Statewide", desc:"Courts across Illinois finalize adoptions and celebrate families.", co:["statewide"], cat:"dcfs", url:"https://www.nationaladoptionday.org" },
+    { month:8, day:1, title:"Kinship Care Month", org:"Illinois DCFS", time:"All Day", loc:"Statewide", desc:"September recognizes kinship caregivers who step up for children.", co:["statewide"], cat:"dcfs", url:"https://dcfs.illinois.gov" },
+    { month:1, weekday:2, nth:4, title:"Adoption & Foster Friendly Schools Webinar", org:"U of I School of Social Work", time:"12:00 PM – 1:00 PM", loc:"Virtual", desc:"Annual webinar training educators on adoption, foster care, and kinship care.", co:["statewide"], cat:"education", url:"https://socialwork.illinois.edu" },
+    { month:5, day:1, title:"Summer Reading Programs Begin", org:"Various IL Libraries", time:"Varies by library", loc:"Local Libraries Statewide", desc:"Libraries across Illinois kick off summer reading programs.", co:["statewide"], cat:"perks", url:"https://www.bookitprogram.com" },
+    { month:7, weekday:6, nth:2, title:"Back-to-School Supply Drive", org:"Multiple Organizations", time:"10:00 AM – 2:00 PM", loc:"Various IL Locations", desc:"Annual back-to-school drives providing free backpacks and supplies.", co:["statewide"], cat:"donations", url:"https://www.ifoster.org" },
+    { month:11, weekday:6, nth:2, title:"Foster Family Christmas Party", org:"The James Project & Cherry Hills Church", time:"10:00 AM – 1:00 PM", loc:"Cherry Hills Church, Springfield", desc:"Annual Christmas party for all Sangamon County foster families.", co:["sangamon"], cat:"faith", url:"https://thejamesproject127.com" },
+    { month:11, weekday:6, nth:1, title:"Holiday Comfort Case Distribution", org:"Comfort Cases & Partners", time:"10:00 AM – 2:00 PM", loc:"Various IL Locations", desc:"Annual holiday distribution of backpacks with comfort items.", co:["statewide"], cat:"donations", url:"https://www.comfortcases.org" },
+    { month:9, weekday:5, nth:3, title:"Restore Network Annual Fundraiser", org:"The Restore Network", time:"6:00 PM – 9:00 PM", loc:"Alton / Edwardsville, IL", desc:"Annual fundraiser supporting foster family recruitment and training.", co:["madison","st_clair","monroe","bond","clinton","macoupin","jersey"], cat:"faith", url:"https://therestorenetwork.org" },
+    { month:2, weekday:6, nth:2, title:"Brightpoint Foster Family Fun Day", org:"Brightpoint", time:"10:00 AM – 2:00 PM", loc:"Various Northern IL Locations", desc:"Spring family event with activities, food, and resource sharing.", co:BRIGHTPOINT.slice(0,6), cat:"support", url:"https://www.brightpoint.org" },
+    { month:6, weekday:6, nth:3, title:"Foster Family Summer Splash", org:"Community Partners", time:"11:00 AM – 3:00 PM", loc:"Various IL Parks & Pools", desc:"Free summer pool and splash pad day for foster families.", co:["statewide"], cat:"perks", url:null },
+    { month:0, weekday:6, nth:3, title:"New Year, New Foster Families Info Fair", org:"Let It Be Us & DCFS", time:"10:00 AM – 2:00 PM", loc:"Virtual & Springfield, IL", desc:"Info fair with multiple agencies, Q&A, and resources for prospective foster families.", co:["statewide"], cat:"dcfs", url:"https://letitbeus.org" },
   ];
 
-  annualTemplates.forEach(tmpl => {
-    months.forEach(({y, m}) => {
-      if (tmpl.month !== m) return;
-      let d;
-      if (tmpl.day) {
-        d = new Date(y, m, tmpl.day);
-      } else if (tmpl.nth && tmpl.weekday !== undefined) {
-        d = nthWeekday(y, m, tmpl.weekday, tmpl.nth);
-      }
-      if (d && d >= today && d <= twoMonthsOut) {
-        events.push({
-          id: "a" + eid++,
-          title: tmpl.title,
-          org: tmpl.org,
-          date: fmt(d),
-          time: tmpl.time,
-          loc: tmpl.loc,
-          desc: tmpl.desc,
-          co: tmpl.co,
-          cat: tmpl.cat,
-          url: tmpl.url
-        });
-      }
-    });
-  });
+  annualTemplates.forEach(tmpl => { months.forEach(({y, m}) => {
+    if (tmpl.month !== m) return;
+    let d; if (tmpl.day) { d = new Date(y, m, tmpl.day); } else if (tmpl.nth && tmpl.weekday !== undefined) { d = nthWeekday(y, m, tmpl.weekday, tmpl.nth); }
+    if (d && d >= today && d <= twoMonthsOut) { events.push({ id: "a" + eid++, title: tmpl.title, org: tmpl.org, date: fmt(d), time: tmpl.time, loc: tmpl.loc, desc: tmpl.desc, co: tmpl.co, cat: tmpl.cat, url: tmpl.url }); }
+  }); });
 
-  // Sort all events by date
   events.sort((a, b) => new Date(a.date) - new Date(b.date));
   return events;
 }
 
-// Generate events once on load
 const EVENTS = generateEvents();
-
-
-// ─── Floating shape component ───
-function FloatingShapes() {
-  const shapes = [
-    { t:"circle", x:"8%", y:"15%", s:45, c:"rgba(255,107,107,0.12)", delay:0 },
-    { t:"circle", x:"85%", y:"8%", s:30, c:"rgba(75,123,236,0.10)", delay:1.5 },
-    { t:"circle", x:"70%", y:"55%", s:55, c:"rgba(247,183,49,0.08)", delay:0.8 },
-    { t:"circle", x:"15%", y:"70%", s:35, c:"rgba(165,94,234,0.10)", delay:2 },
-    { t:"circle", x:"50%", y:"30%", s:25, c:"rgba(38,222,129,0.09)", delay:1.2 },
-  ];
-  return <>{shapes.map((sh,i)=><div key={i} style={{position:"absolute",left:sh.x,top:sh.y,width:sh.s,height:sh.s,borderRadius:"50%",background:sh.c,animation:`bobble ${3+i*0.5}s ease-in-out infinite`,animationDelay:`${sh.delay}s`,pointerEvents:"none"}} />)}</>;
+// Focus trap hook for modals
+function useFocusTrap(isOpen) {
+  const ref = useRef(null);
+  const previousFocus = useRef(null);
+  useEffect(() => {
+    if (!isOpen) return;
+    previousFocus.current = document.activeElement;
+    const trap = ref.current; if (!trap) return;
+    const focusable = trap.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const first = focusable[0]; const last = focusable[focusable.length - 1];
+    if (first) first.focus();
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') { e.preventDefault(); if (previousFocus.current) previousFocus.current.click(); return; }
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+      else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+    }
+    trap.addEventListener('keydown', handleKeyDown);
+    return () => { trap.removeEventListener('keydown', handleKeyDown); if (previousFocus.current) previousFocus.current.focus(); };
+  }, [isOpen]);
+  return ref;
 }
 
-// ─── Card with staggered animation ───
+function FloatingShapes() {
+  const shapes = [{x:"8%",y:"15%",s:45,c:"rgba(255,107,107,0.12)",delay:0},{x:"85%",y:"8%",s:30,c:"rgba(75,123,236,0.10)",delay:1.5},{x:"70%",y:"55%",s:55,c:"rgba(247,183,49,0.08)",delay:0.8},{x:"15%",y:"70%",s:35,c:"rgba(165,94,234,0.10)",delay:2},{x:"50%",y:"30%",s:25,c:"rgba(38,222,129,0.09)",delay:1.2}];
+  return <div aria-hidden="true">{shapes.map((sh,i)=><div key={i} style={{position:"absolute",left:sh.x,top:sh.y,width:sh.s,height:sh.s,borderRadius:"50%",background:sh.c,animation:`bobble ${3+i*0.5}s ease-in-out infinite`,animationDelay:`${sh.delay}s`,pointerEvents:"none"}} />)}</div>;
+}
+
 function AnimCard({children, delay=0, style={}}) {
   const [vis,setVis]=useState(false);
   useEffect(()=>{const t=setTimeout(()=>setVis(true),delay*80);return()=>clearTimeout(t)},[delay]);
@@ -537,293 +348,253 @@ function AnimCard({children, delay=0, style={}}) {
 }
 
 function CountyPicker({sel,onSel,onClose}){
-  const[s,setS]=useState("");
-  const f=COUNTIES.filter(c=>c.label.toLowerCase().includes(s.toLowerCase()));
+  const [searchText,setSearchText]=useState("");
+  const trapRef = useFocusTrap(true);
+  const filtered=COUNTIES.filter(c=>c.label.toLowerCase().includes(searchText.toLowerCase()));
   return(<div style={{position:"fixed",inset:0,zIndex:200,background:"rgba(30,20,50,0.5)",backdropFilter:"blur(12px)",display:"flex",alignItems:"flex-end",justifyContent:"center"}} onClick={onClose}>
-    <div style={{background:"#FFFBF5",borderRadius:"28px 28px 0 0",width:"100%",maxWidth:480,maxHeight:"85vh",overflow:"hidden",boxShadow:"0 -12px 50px rgba(0,0,0,0.2)",animation:"slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)",display:"flex",flexDirection:"column"}} onClick={e=>e.stopPropagation()}>
+    <div ref={trapRef} role="dialog" aria-modal="true" aria-labelledby="county-picker-title" style={{background:"#FFFBF5",borderRadius:"28px 28px 0 0",width:"100%",maxWidth:480,maxHeight:"85vh",overflow:"hidden",boxShadow:"0 -12px 50px rgba(0,0,0,0.2)",animation:"slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)",display:"flex",flexDirection:"column"}} onClick={e=>e.stopPropagation()}>
       <div style={{padding:"20px 22px 0"}}>
-        <div style={{width:44,height:5,background:"#E8DFD4",borderRadius:3,margin:"0 auto 16px"}}/>
-        <h3 style={{margin:"0 0 2px",fontFamily:"'Baloo 2',sans-serif",fontSize:22,fontWeight:800,color:"#2D1B4E"}}>Pick Your County</h3>
+        <div aria-hidden="true" style={{width:44,height:5,background:"#E8DFD4",borderRadius:3,margin:"0 auto 16px"}}/>
+        <h2 id="county-picker-title" style={{margin:"0 0 2px",fontFamily:"'Baloo 2',sans-serif",fontSize:22,fontWeight:800,color:"#2D1B4E"}}>Pick Your County</h2>
         <p style={{margin:"0 0 12px",fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B",fontWeight:600}}>All 102 counties — see local + statewide resources</p>
-        <input placeholder="🔍 Type to search..." value={s} onChange={e=>setS(e.target.value)} style={{width:"100%",padding:"12px 16px",borderRadius:16,border:"2px solid #E8DFD4",fontFamily:"'Quicksand',sans-serif",fontSize:14,color:"#2D1B4E",outline:"none",background:"#FFF8EE",marginBottom:10,boxSizing:"border-box",transition:"border 0.2s",}} onFocus={e=>e.target.style.borderColor="#F7B731"} onBlur={e=>e.target.style.borderColor="#E8DFD4"} />
+        <label htmlFor="county-search" className="sr-only">Search counties</label>
+        <input id="county-search" placeholder="Type to search..." value={searchText} onChange={e=>setSearchText(e.target.value)} style={{width:"100%",padding:"12px 16px",borderRadius:16,border:"2px solid #E8DFD4",fontFamily:"'Quicksand',sans-serif",fontSize:14,color:"#2D1B4E",outline:"none",background:"#FFF8EE",marginBottom:10,boxSizing:"border-box"}} />
+        <div aria-live="polite" aria-atomic="true" className="sr-only">{filtered.length} counties found</div>
       </div>
-      <div style={{flex:1,overflowY:"auto",padding:"4px 22px 22px"}}>
-        {f.map(c=><button key={c.id} onClick={()=>{onSel(c.id);onClose()}} style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"12px 14px",borderRadius:14,border:sel===c.id?"2.5px solid #FF6B6B":"2px solid transparent",background:sel===c.id?"#FFF0EE":"#FFF8EE",cursor:"pointer",marginBottom:5,fontFamily:"'Quicksand',sans-serif",fontSize:14,fontWeight:700,color:sel===c.id?"#FF6B6B":"#2D1B4E",textAlign:"left",boxSizing:"border-box",transition:"all 0.2s",boxShadow:sel===c.id?"0 2px 12px rgba(255,107,107,0.15)":"none"}}><span style={{fontSize:16}}>{c.id==="all"?"🌍":"📍"}</span>{c.label}{sel===c.id&&<span style={{marginLeft:"auto",fontSize:16,color:"#FF6B6B"}}>✓</span>}</button>)}
+      <div role="listbox" aria-label="County selection" style={{flex:1,overflowY:"auto",padding:"4px 22px 22px"}}>
+        {filtered.map(c=><button key={c.id} role="option" aria-selected={sel===c.id} onClick={()=>{onSel(c.id);onClose()}} style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"12px 14px",borderRadius:14,border:sel===c.id?"2.5px solid #FF6B6B":"2px solid transparent",background:sel===c.id?"#FFF0EE":"#FFF8EE",cursor:"pointer",marginBottom:5,fontFamily:"'Quicksand',sans-serif",fontSize:14,fontWeight:700,color:sel===c.id?"#FF6B6B":"#2D1B4E",textAlign:"left",boxSizing:"border-box"}}><span aria-hidden="true" style={{fontSize:16}}>{c.id==="all"?"🌍":"📍"}</span>{c.label}{sel===c.id&&<span aria-hidden="true" style={{marginLeft:"auto",fontSize:16,color:"#FF6B6B"}}>✓</span>}</button>)}
       </div>
+      <div style={{padding:"12px 22px"}}><button onClick={onClose} aria-label="Close county picker" style={{width:"100%",padding:14,borderRadius:16,border:"none",background:"#2D1B4E",color:"#fff",fontFamily:"'Baloo 2',sans-serif",fontSize:16,fontWeight:700,cursor:"pointer"}}>Close</button></div>
     </div>
   </div>);
 }
 
 function Sheet({res,onClose}){
-  const cat=CATEGORIES.find(c=>c.id===res.c);
+  const cat=CATEGORIES.find(c=>c.id===res.c); const trapRef = useFocusTrap(true);
   return(<div style={{position:"fixed",inset:0,zIndex:150,background:"rgba(30,20,50,0.5)",backdropFilter:"blur(12px)",display:"flex",alignItems:"flex-end",justifyContent:"center"}} onClick={onClose}>
-    <div style={{background:"#FFFBF5",borderRadius:"28px 28px 0 0",width:"100%",maxWidth:480,maxHeight:"82vh",overflowY:"auto",padding:"24px 22px",boxShadow:"0 -12px 50px rgba(0,0,0,0.2)",animation:"slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)"}} onClick={e=>e.stopPropagation()}>
-      <div style={{width:44,height:5,background:"#E8DFD4",borderRadius:3,margin:"0 auto 20px"}}/>
+    <div ref={trapRef} role="dialog" aria-modal="true" aria-labelledby="resource-title" style={{background:"#FFFBF5",borderRadius:"28px 28px 0 0",width:"100%",maxWidth:480,maxHeight:"82vh",overflowY:"auto",padding:"24px 22px",boxShadow:"0 -12px 50px rgba(0,0,0,0.2)",animation:"slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)"}} onClick={e=>e.stopPropagation()}>
+      <div aria-hidden="true" style={{width:44,height:5,background:"#E8DFD4",borderRadius:3,margin:"0 auto 20px"}}/>
       <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:18}}>
-        <div style={{width:56,height:56,borderRadius:18,background:cat?.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,boxShadow:`0 4px 15px ${cat?.color}33`}}>{cat?.icon}</div>
-        <div><h2 style={{margin:0,fontFamily:"'Baloo 2',sans-serif",fontSize:20,fontWeight:800,color:"#2D1B4E",lineHeight:1.2}}>{res.n}</h2><span style={{fontFamily:"'Quicksand',sans-serif",fontSize:11,color:"#fff",fontWeight:700,background:cat?.color,padding:"3px 12px",borderRadius:20}}>{cat?.label}</span></div>
+        <div aria-hidden="true" style={{width:56,height:56,borderRadius:18,background:cat?.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,boxShadow:`0 4px 15px ${cat?.color}33`}}>{cat?.icon}</div>
+        <div><h2 id="resource-title" style={{margin:0,fontFamily:"'Baloo 2',sans-serif",fontSize:20,fontWeight:800,color:"#2D1B4E",lineHeight:1.2}}>{res.n}</h2><span style={{fontFamily:"'Quicksand',sans-serif",fontSize:11,color:"#fff",fontWeight:700,background:cat?.color,padding:"3px 12px",borderRadius:20}}>{cat?.label}</span></div>
       </div>
       <p style={{fontFamily:"'Quicksand',sans-serif",fontSize:15,color:"#6B5B4E",lineHeight:1.7,margin:"0 0 18px",fontWeight:500}}>{res.d}</p>
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
-        <div style={{background:"#FFF3E0",borderRadius:16,padding:"12px 16px",display:"flex",alignItems:"center",gap:10,border:"2px dashed #F7B73144"}}><span style={{fontSize:18}}>📍</span><span style={{fontFamily:"'Quicksand',sans-serif",fontSize:14,color:"#2D1B4E",fontWeight:700}}>{res.r}</span></div>
-        {res.p&&<a href={`tel:${res.p.replace(/-/g,"")}`} style={{background:"linear-gradient(135deg,#26DE81,#20BF6B)",borderRadius:16,padding:"14px 16px",display:"flex",alignItems:"center",gap:10,textDecoration:"none",boxShadow:"0 4px 15px rgba(32,191,107,0.3)"}}><span style={{fontSize:18}}>📞</span><span style={{fontFamily:"'Baloo 2',sans-serif",fontSize:16,color:"#fff",fontWeight:700}}>{res.p}</span></a>}
-        {res.u&&<a href={res.u} target="_blank" rel="noopener noreferrer" style={{background:"linear-gradient(135deg,#4B7BEC,#3867d6)",borderRadius:16,padding:"14px 16px",display:"flex",alignItems:"center",gap:10,textDecoration:"none",boxShadow:"0 4px 15px rgba(75,123,236,0.3)"}}><span style={{fontSize:18}}>🌐</span><span style={{fontFamily:"'Baloo 2',sans-serif",fontSize:16,color:"#fff",fontWeight:700}}>Visit Website</span></a>}
+        <div style={{background:"#FFF3E0",borderRadius:16,padding:"12px 16px",display:"flex",alignItems:"center",gap:10,border:"2px dashed #F7B73144"}}><span aria-hidden="true" style={{fontSize:18}}>📍</span><span style={{fontFamily:"'Quicksand',sans-serif",fontSize:14,color:"#2D1B4E",fontWeight:700}}>Service area: {res.r}</span></div>
+        {res.p&&<a href={`tel:${res.p.replace(/[^0-9]/g,"")}`} aria-label={`Call ${res.n} at ${res.p}`} style={{background:"linear-gradient(135deg,#26DE81,#20BF6B)",borderRadius:16,padding:"14px 16px",display:"flex",alignItems:"center",gap:10,textDecoration:"none",boxShadow:"0 4px 15px rgba(32,191,107,0.3)"}}><span aria-hidden="true" style={{fontSize:18}}>📞</span><span style={{fontFamily:"'Baloo 2',sans-serif",fontSize:16,color:"#fff",fontWeight:700}}>Call {res.p}</span></a>}
+        {res.u&&<a href={res.u} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${res.n} website (opens in new tab)`} style={{background:"linear-gradient(135deg,#4B7BEC,#3867d6)",borderRadius:16,padding:"14px 16px",display:"flex",alignItems:"center",gap:10,textDecoration:"none",boxShadow:"0 4px 15px rgba(75,123,236,0.3)"}}><span aria-hidden="true" style={{fontSize:18}}>🌐</span><span style={{fontFamily:"'Baloo 2',sans-serif",fontSize:16,color:"#fff",fontWeight:700}}>Visit Website</span><span className="sr-only">(opens in new tab)</span></a>}
       </div>
-      <button onClick={onClose} style={{width:"100%",marginTop:18,padding:14,borderRadius:16,border:"none",background:"#2D1B4E",color:"#fff",fontFamily:"'Baloo 2',sans-serif",fontSize:16,fontWeight:700,cursor:"pointer",boxShadow:"0 4px 15px rgba(45,27,78,0.3)"}}>Close</button>
+      <button onClick={onClose} aria-label="Close resource details" style={{width:"100%",marginTop:18,padding:14,borderRadius:16,border:"none",background:"#2D1B4E",color:"#fff",fontFamily:"'Baloo 2',sans-serif",fontSize:16,fontWeight:700,cursor:"pointer"}}>Close</button>
     </div>
   </div>);
 }
 
 function EventSheet({ev,onClose}){
-  const catObj=CATEGORIES.find(c=>c.id===ev.cat);
-  const d=new Date(ev.date+"T12:00:00");
-  const month=d.toLocaleString("en-US",{month:"short"});
-  const day=d.getDate();
+  const catObj=CATEGORIES.find(c=>c.id===ev.cat); const d=new Date(ev.date+"T12:00:00"); const month=d.toLocaleString("en-US",{month:"short"}); const day=d.getDate(); const trapRef = useFocusTrap(true);
   return(<div style={{position:"fixed",inset:0,zIndex:150,background:"rgba(30,20,50,0.5)",backdropFilter:"blur(12px)",display:"flex",alignItems:"flex-end",justifyContent:"center"}} onClick={onClose}>
-    <div style={{background:"#FFFBF5",borderRadius:"28px 28px 0 0",width:"100%",maxWidth:480,maxHeight:"82vh",overflowY:"auto",padding:"24px 22px",boxShadow:"0 -12px 50px rgba(0,0,0,0.2)",animation:"slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)"}} onClick={e=>e.stopPropagation()}>
-      <div style={{width:44,height:5,background:"#E8DFD4",borderRadius:3,margin:"0 auto 20px"}}/>
+    <div ref={trapRef} role="dialog" aria-modal="true" aria-labelledby="event-title" style={{background:"#FFFBF5",borderRadius:"28px 28px 0 0",width:"100%",maxWidth:480,maxHeight:"82vh",overflowY:"auto",padding:"24px 22px",boxShadow:"0 -12px 50px rgba(0,0,0,0.2)",animation:"slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)"}} onClick={e=>e.stopPropagation()}>
+      <div aria-hidden="true" style={{width:44,height:5,background:"#E8DFD4",borderRadius:3,margin:"0 auto 20px"}}/>
       <div style={{display:"flex",alignItems:"flex-start",gap:14,marginBottom:18}}>
-        <div style={{width:60,height:60,borderRadius:18,background:"linear-gradient(135deg,#FF6B6B,#ee5a24)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 15px rgba(255,107,107,0.3)"}}>
-          <span style={{fontFamily:"'Quicksand',sans-serif",fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.85)",textTransform:"uppercase",lineHeight:1}}>{month}</span>
-          <span style={{fontFamily:"'Baloo 2',sans-serif",fontSize:24,fontWeight:800,color:"#fff",lineHeight:1}}>{day}</span>
-        </div>
-        <div><h2 style={{margin:0,fontFamily:"'Baloo 2',sans-serif",fontSize:18,fontWeight:800,color:"#2D1B4E",lineHeight:1.25}}>{ev.title}</h2><span style={{fontFamily:"'Quicksand',sans-serif",fontSize:12,color:"#8B7A6B",fontWeight:600}}>{ev.org}</span></div>
+        <div aria-hidden="true" style={{width:60,height:60,borderRadius:18,background:"linear-gradient(135deg,#FF6B6B,#ee5a24)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.85)",textTransform:"uppercase",lineHeight:1}}>{month}</span><span style={{fontSize:24,fontWeight:800,color:"#fff",lineHeight:1}}>{day}</span></div>
+        <div><h2 id="event-title" style={{margin:0,fontFamily:"'Baloo 2',sans-serif",fontSize:18,fontWeight:800,color:"#2D1B4E",lineHeight:1.25}}>{ev.title}</h2><span style={{fontFamily:"'Quicksand',sans-serif",fontSize:12,color:"#8B7A6B",fontWeight:600}}>{ev.org}</span></div>
       </div>
       <p style={{fontFamily:"'Quicksand',sans-serif",fontSize:15,color:"#6B5B4E",lineHeight:1.7,margin:"0 0 16px",fontWeight:500}}>{ev.desc}</p>
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
-        <div style={{background:"#EDE7F6",borderRadius:16,padding:"12px 16px",display:"flex",alignItems:"center",gap:10,border:"2px dashed #D1C4E944"}}><span style={{fontSize:16}}>🕐</span><span style={{fontFamily:"'Quicksand',sans-serif",fontSize:14,color:"#5E35B1",fontWeight:700}}>{ev.time}</span></div>
-        <div style={{background:"#FFF3E0",borderRadius:16,padding:"12px 16px",display:"flex",alignItems:"center",gap:10,border:"2px dashed #F7B73144"}}><span style={{fontSize:16}}>📍</span><span style={{fontFamily:"'Quicksand',sans-serif",fontSize:14,color:"#2D1B4E",fontWeight:700}}>{ev.loc}</span></div>
-        {catObj&&<div style={{display:"flex",alignItems:"center",gap:8}}><span style={{background:catObj.bg,borderRadius:10,padding:"4px 12px",fontSize:11,fontWeight:700,color:"#fff"}}>{catObj.icon} {catObj.label}</span></div>}
-        {ev.url&&<a href={ev.url} target="_blank" rel="noopener noreferrer" style={{background:"linear-gradient(135deg,#4B7BEC,#3867d6)",borderRadius:16,padding:"14px 16px",display:"flex",alignItems:"center",gap:10,textDecoration:"none",boxShadow:"0 4px 15px rgba(75,123,236,0.3)"}}><span style={{fontSize:18}}>🌐</span><span style={{fontFamily:"'Baloo 2',sans-serif",fontSize:16,color:"#fff",fontWeight:700}}>More Info</span></a>}
+        <div style={{background:"#EDE7F6",borderRadius:16,padding:"12px 16px",display:"flex",alignItems:"center",gap:10}}><span aria-hidden="true" style={{fontSize:16}}>🕐</span><span style={{fontFamily:"'Quicksand',sans-serif",fontSize:14,color:"#5E35B1",fontWeight:700}}>{ev.time}</span></div>
+        <div style={{background:"#FFF3E0",borderRadius:16,padding:"12px 16px",display:"flex",alignItems:"center",gap:10}}><span aria-hidden="true" style={{fontSize:16}}>📍</span><span aria-label={ev.loc} style={{fontFamily:"'Quicksand',sans-serif",fontSize:14,color:"#2D1B4E",fontWeight:700}}>{ev.loc}</span></div>
+        {ev.url&&<a href={ev.url} target="_blank" rel="noopener noreferrer" aria-label={`More info about ${ev.title} (opens in new tab)`} style={{background:"linear-gradient(135deg,#4B7BEC,#3867d6)",borderRadius:16,padding:"14px 16px",display:"flex",alignItems:"center",gap:10,textDecoration:"none",boxShadow:"0 4px 15px rgba(75,123,236,0.3)"}}><span aria-hidden="true" style={{fontSize:18}}>🌐</span><span style={{fontFamily:"'Baloo 2',sans-serif",fontSize:16,color:"#fff",fontWeight:700}}>More Info</span><span className="sr-only">(opens in new tab)</span></a>}
       </div>
-      <button onClick={onClose} style={{width:"100%",marginTop:18,padding:14,borderRadius:16,border:"none",background:"#2D1B4E",color:"#fff",fontFamily:"'Baloo 2',sans-serif",fontSize:16,fontWeight:700,cursor:"pointer",boxShadow:"0 4px 15px rgba(45,27,78,0.3)"}}>Close</button>
+      <button onClick={onClose} aria-label="Close event details" style={{width:"100%",marginTop:18,padding:14,borderRadius:16,border:"none",background:"#2D1B4E",color:"#fff",fontFamily:"'Baloo 2',sans-serif",fontSize:16,fontWeight:700,cursor:"pointer"}}>Close</button>
     </div>
   </div>);
 }
 
 function Item({res,onClick,idx}){
-  const cat=CATEGORIES.find(c=>c.id===res.c);const isL=!res.co.includes("statewide");
-  return(<AnimCard delay={idx} style={{cursor:"pointer"}}><div onClick={onClick} style={{background:"#FFFBF5",borderRadius:20,padding:"16px 14px",marginBottom:12,border:"2px solid #F0E4D8",boxShadow:"0 3px 15px rgba(45,27,78,0.05)",transition:"all 0.2s",position:"relative",overflow:"hidden"}}>
-    <div style={{position:"absolute",top:-10,right:-10,width:50,height:50,borderRadius:"50%",background:`${cat?.color}08`}}/>
+  const cat=CATEGORIES.find(c=>c.id===res.c); const isLocal=!res.co.includes("statewide");
+  return(<AnimCard delay={idx}><button onClick={onClick} aria-label={`${res.n} — ${cat?.label}. ${isLocal?"Local resource":"Statewide resource"}. Tap for details.`} style={{width:"100%",textAlign:"left",background:"#FFFBF5",borderRadius:20,padding:"16px 14px",marginBottom:12,border:"2px solid #F0E4D8",boxShadow:"0 3px 15px rgba(45,27,78,0.05)",cursor:"pointer",fontFamily:"inherit",position:"relative",overflow:"hidden"}}>
     <div style={{display:"flex",alignItems:"flex-start",gap:12,position:"relative"}}>
-      <div style={{width:44,height:44,borderRadius:14,background:cat?.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0,boxShadow:`0 3px 10px ${cat?.color}22`}}>{cat?.icon}</div>
+      <div aria-hidden="true" style={{width:44,height:44,borderRadius:14,background:cat?.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>{cat?.icon}</div>
       <div style={{flex:1,minWidth:0}}>
         <div style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:800,fontSize:15,color:"#2D1B4E",marginBottom:3}}>{res.n}</div>
         <p style={{fontFamily:"'Quicksand',sans-serif",fontSize:12,color:"#8B7A6B",lineHeight:1.55,margin:"0 0 7px",fontWeight:500}}>{res.d}</p>
         <div style={{display:"flex",alignItems:"center",gap:5,flexWrap:"wrap"}}>
-          <span style={{background:isL?"linear-gradient(135deg,#A55EEA22,#8854d022)":"#F0E4D8",borderRadius:8,padding:"3px 9px",fontSize:10,fontWeight:700,color:isL?"#8854d0":"#8B7A6B",border:isL?"1.5px solid #A55EEA33":"none"}}>{isL?"📍 Local":"🌍 Statewide"}</span>
-          {res.p&&<span style={{background:"linear-gradient(135deg,#26DE8122,#20BF6B22)",borderRadius:8,padding:"3px 9px",fontSize:10,fontWeight:700,color:"#20BF6B",border:"1.5px solid #26DE8133"}}>📞 {res.p}</span>}
+          <span style={{background:isLocal?"linear-gradient(135deg,#A55EEA22,#8854d022)":"#F0E4D8",borderRadius:8,padding:"3px 9px",fontSize:10,fontWeight:700,color:isLocal?"#8854d0":"#8B7A6B",border:isLocal?"1.5px solid #A55EEA33":"none"}}><span aria-hidden="true">{isLocal?"📍":"🌍"}</span> {isLocal?"Local":"Statewide"}</span>
+          {res.p&&<span style={{background:"linear-gradient(135deg,#26DE8122,#20BF6B22)",borderRadius:8,padding:"3px 9px",fontSize:10,fontWeight:700,color:"#20BF6B",border:"1.5px solid #26DE8133"}}><span aria-hidden="true">📞</span> {res.p}</span>}
         </div>
       </div>
-      <div style={{color:"#E8DFD4",fontSize:22,marginTop:4,fontWeight:800}}>›</div>
+      <div aria-hidden="true" style={{color:"#E8DFD4",fontSize:22,marginTop:4,fontWeight:800}}>›</div>
     </div>
-  </div></AnimCard>);
+  </button></AnimCard>);
 }
 
 function EventItem({ev,onClick,idx}){
-  const d=new Date(ev.date+"T12:00:00");
-  const month=d.toLocaleString("en-US",{month:"short"}).toUpperCase();
-  const day=d.getDate();
-  const catObj=CATEGORIES.find(c=>c.id===ev.cat);
-  const isPast = new Date(ev.date) < new Date(new Date().toDateString());
-  return(<AnimCard delay={idx} style={{cursor:"pointer"}}><div onClick={onClick} style={{background:"#FFFBF5",borderRadius:20,padding:"14px 14px",marginBottom:12,border:"2px solid #F0E4D8",boxShadow:"0 3px 15px rgba(45,27,78,0.05)",transition:"all 0.2s",opacity:isPast?0.6:1}}>
+  const d=new Date(ev.date+"T12:00:00"); const month=d.toLocaleString("en-US",{month:"short"}).toUpperCase(); const day=d.getDate();
+  const isPast = new Date(ev.date+"T23:59:59") < new Date();
+  return(<AnimCard delay={idx}><button onClick={onClick} aria-label={`${ev.title} by ${ev.org} on ${d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})}${isPast?" (past event)":""}`} style={{width:"100%",textAlign:"left",background:"#FFFBF5",borderRadius:20,padding:"14px 14px",marginBottom:12,border:"2px solid #F0E4D8",cursor:"pointer",fontFamily:"inherit",opacity:isPast?0.6:1}}>
     <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
-      <div style={{width:50,height:54,borderRadius:14,background:"linear-gradient(135deg,#FF6B6B,#ee5a24)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 3px 12px rgba(255,107,107,0.25)"}}>
-        <span style={{fontFamily:"'Quicksand',sans-serif",fontSize:9,fontWeight:700,color:"rgba(255,255,255,0.85)",textTransform:"uppercase",lineHeight:1}}>{month}</span>
-        <span style={{fontFamily:"'Baloo 2',sans-serif",fontSize:22,fontWeight:800,color:"#fff",lineHeight:1}}>{day}</span>
-      </div>
+      <div aria-hidden="true" style={{width:50,height:54,borderRadius:14,background:"linear-gradient(135deg,#FF6B6B,#ee5a24)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{fontSize:9,fontWeight:700,color:"rgba(255,255,255,0.85)",textTransform:"uppercase",lineHeight:1}}>{month}</span><span style={{fontSize:22,fontWeight:800,color:"#fff",lineHeight:1}}>{day}</span></div>
       <div style={{flex:1,minWidth:0}}>
-        <div style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:800,fontSize:14,color:"#2D1B4E",marginBottom:2,lineHeight:1.3}}>{ev.title}</div>
+        <div style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:800,fontSize:14,color:"#2D1B4E",marginBottom:2,lineHeight:1.3}}>{ev.title}{isPast && <span style={{fontSize:10,color:"#DC2626",fontWeight:700,marginLeft:6,background:"#FEE2E2",padding:"1px 6px",borderRadius:4}}>Past</span>}</div>
         <div style={{fontFamily:"'Quicksand',sans-serif",fontSize:11,color:"#8B7A6B",fontWeight:600,marginBottom:4}}>{ev.org} • {ev.time}</div>
-        <div style={{display:"flex",alignItems:"center",gap:5,flexWrap:"wrap"}}>
-          <span style={{background:"#FFF3E0",borderRadius:8,padding:"2px 8px",fontSize:10,fontWeight:700,color:"#B8650A"}}>📍 {ev.loc.length > 30 ? ev.loc.substring(0,30)+"..." : ev.loc}</span>
-          {catObj&&<span style={{background:catObj.bg,borderRadius:8,padding:"2px 8px",fontSize:10,fontWeight:700,color:"#fff"}}>{catObj.icon}</span>}
-        </div>
+        <div style={{display:"flex",alignItems:"center",gap:5,flexWrap:"wrap"}}><span style={{background:"#FFF3E0",borderRadius:8,padding:"2px 8px",fontSize:10,fontWeight:700,color:"#B8650A"}}><span aria-hidden="true">📍</span> {ev.loc.length>30?ev.loc.substring(0,30)+"...":ev.loc}</span></div>
       </div>
-      <div style={{color:"#E8DFD4",fontSize:22,marginTop:4,fontWeight:800}}>›</div>
+      <div aria-hidden="true" style={{color:"#E8DFD4",fontSize:22,marginTop:4,fontWeight:800}}>›</div>
     </div>
-  </div></AnimCard>);
+  </button></AnimCard>);
 }
 
-
 function App(){
-  const[tab,setTab]=useState("home");const[county,setCounty]=useState("all");const[cat,setCat]=useState(null);const[sel,setSel]=useState(null);const[selEv,setSelEv]=useState(null);const[q,setQ]=useState("");const[showS,setShowS]=useState(false);const[showC,setShowC]=useState(false);const[loaded,setLoaded]=useState(false);
-  useEffect(()=>{setTimeout(()=>setLoaded(true),100)},[]);
-  const filt=(cf)=>R.filter(r=>{const mc=cf?r.c===cf:true;const mco=county==="all"||r.co.includes("statewide")||r.co.includes(county);const mq=q?r.n.toLowerCase().includes(q.toLowerCase())||r.d.toLowerCase().includes(q.toLowerCase()):true;return mc&&mco&&mq});
-  const fr=filt(cat);const cl=COUNTIES.find(c=>c.id===county)?.label||"All Illinois";
-  const cc={};CATEGORIES.forEach(c=>{cc[c.id]=filt(c.id).length});
+  const[tab,setTab]=useState("home");const[county,setCounty]=useState("all");const[cat,setCat]=useState(null);const[sel,setSel]=useState(null);const[selEv,setSelEv]=useState(null);const[searchQuery,setSearchQuery]=useState("");const[showSearch,setShowSearch]=useState(false);const[showCounty,setShowCounty]=useState(false);const[announcement,setAnnouncement]=useState("");
 
-  // Filter events by county
-  const filteredEvents=EVENTS.filter(ev=>{
-    const mco=county==="all"||ev.co.includes("statewide")||ev.co.includes(county);
-    return mco;
-  }).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const filterResources=(cf)=>R.filter(r=>{const mc=cf?r.c===cf:true;const mco=county==="all"||r.co.includes("statewide")||r.co.includes(county);const mq=searchQuery?r.n.toLowerCase().includes(searchQuery.toLowerCase())||r.d.toLowerCase().includes(searchQuery.toLowerCase()):true;return mc&&mco&&mq});
+  const filteredResources=filterResources(cat);const countyLabel=COUNTIES.find(c=>c.id===county)?.label||"All Illinois";
+  const categoryCounts={};CATEGORIES.forEach(c=>{categoryCounts[c.id]=filterResources(c.id).length});
+  const filteredEvents=EVENTS.filter(ev=>county==="all"||ev.co.includes("statewide")||ev.co.includes(county)).sort((a,b)=>new Date(a.date)-new Date(b.date));
 
-  const em=[{l:"Child Abuse Hotline",n:"1-800-252-2873",i:"🚨",bg:"linear-gradient(135deg,#FF6B6B,#ee5a24)"},{l:"Foster Parent Helpline",n:"866-368-5204",i:"📞",bg:"linear-gradient(135deg,#20BF6B,#0fb85e)"},{l:"DCFS Advocacy",n:"800-232-3798",i:"🤝",bg:"linear-gradient(135deg,#4B7BEC,#3867d6)"},{l:"Crisis Lifeline",n:"988",i:"💙",bg:"linear-gradient(135deg,#A55EEA,#8854d0)"}];
+  useEffect(()=>{if(searchQuery)setAnnouncement(`${filteredResources.length} results found`)},[searchQuery,filteredResources.length]);
+  useEffect(()=>{if(cat){const cl=CATEGORIES.find(c=>c.id===cat)?.label;setAnnouncement(`Showing ${filteredResources.length} ${cl} resources`)}},[cat,filteredResources.length]);
+  useEffect(()=>{if(tab==="events")setAnnouncement(`${filteredEvents.length} upcoming events`)},[tab,filteredEvents.length]);
+
+  const emergencyNumbers=[{label:"Child Abuse Hotline",number:"1-800-252-2873",icon:"🚨",bg:"linear-gradient(135deg,#FF6B6B,#ee5a24)"},{label:"Foster Parent Helpline",number:"866-368-5204",icon:"📞",bg:"linear-gradient(135deg,#20BF6B,#0fb85e)"},{label:"DCFS Advocacy",number:"800-232-3798",icon:"🤝",bg:"linear-gradient(135deg,#4B7BEC,#3867d6)"},{label:"Crisis Lifeline",number:"988",icon:"💙",bg:"linear-gradient(135deg,#A55EEA,#8854d0)"}];
 
   return(<div style={{maxWidth:480,margin:"0 auto",minHeight:"100vh",background:"linear-gradient(180deg,#FFFBF5 0%,#FFF3E0 30%,#FFF8EE 60%,#FFFBF5 100%)",fontFamily:"'Quicksand',sans-serif",position:"relative",overflow:"hidden"}}>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <style>{`
       @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-      @keyframes bobble{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-8px) rotate(2deg)}75%{transform:translateY(4px) rotate(-1deg)}}
+      @keyframes bobble{0%,100%{transform:translateY(0)}25%{transform:translateY(-8px)}75%{transform:translateY(4px)}}
       @keyframes wiggle{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
       @keyframes fadeSlide{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
       @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
       *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
       ::-webkit-scrollbar{width:0}
       body{margin:0;background:#FFFBF5}
-      .cat-card:active{transform:scale(0.96)!important}
+      .cat-btn:active{transform:scale(0.96)!important}
       .nav-btn:active{transform:scale(0.9)!important}
     `}</style>
+    <div aria-live="polite" aria-atomic="true" className="sr-only">{announcement}</div>
 
-    {/* ═══ HEADER ═══ */}
-    <div style={{background:"linear-gradient(135deg,#2D1B4E 0%,#4B2D7A 40%,#6B3FA0 100%)",padding:"22px 22px 30px",borderRadius:"0 0 32px 32px",position:"relative",overflow:"hidden"}}>
-      <div style={{position:"absolute",top:-20,right:-15,width:100,height:100,borderRadius:"50%",background:"rgba(247,183,49,0.15)",filter:"blur(1px)"}}/>
-      <div style={{position:"absolute",bottom:-25,left:-20,width:80,height:80,borderRadius:"50%",background:"rgba(255,107,107,0.12)",filter:"blur(1px)"}}/>
-      <div style={{position:"absolute",top:20,left:"40%",width:40,height:40,borderRadius:"50%",background:"rgba(165,94,234,0.15)"}}/>
-      <div style={{position:"absolute",bottom:15,right:"30%",width:12,height:12,borderRadius:"50%",background:"rgba(247,183,49,0.4)",animation:"pulse 2s ease infinite"}}/>
-      <div style={{position:"absolute",top:35,right:"20%",width:8,height:8,borderRadius:"50%",background:"rgba(255,107,107,0.4)",animation:"pulse 2.5s ease infinite 0.5s"}}/>
-
+    <header style={{background:"linear-gradient(135deg,#2D1B4E 0%,#4B2D7A 40%,#6B3FA0 100%)",padding:"22px 22px 30px",borderRadius:"0 0 32px 32px",position:"relative",overflow:"hidden"}}>
+      <div aria-hidden="true"><div style={{position:"absolute",top:-20,right:-15,width:100,height:100,borderRadius:"50%",background:"rgba(247,183,49,0.15)"}}/><div style={{position:"absolute",bottom:-25,left:-20,width:80,height:80,borderRadius:"50%",background:"rgba(255,107,107,0.12)"}}/><div style={{position:"absolute",top:20,left:"40%",width:40,height:40,borderRadius:"50%",background:"rgba(165,94,234,0.15)"}}/><div style={{position:"absolute",bottom:15,right:"30%",width:12,height:12,borderRadius:"50%",background:"rgba(247,183,49,0.4)",animation:"pulse 2s ease infinite"}}/></div>
       <div style={{position:"relative",zIndex:1}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-          <div style={{fontSize:32,animation:"wiggle 2s ease-in-out infinite"}}>🏡</div>
-          <button onClick={()=>setShowS(!showS)} style={{background:"rgba(255,255,255,0.15)",border:"2px solid rgba(255,255,255,0.2)",borderRadius:14,width:42,height:42,fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all 0.2s",backdropFilter:"blur(4px)"}}>🔍</button>
+          <span aria-hidden="true" style={{fontSize:32,animation:"wiggle 2s ease-in-out infinite"}}>🏡</span>
+          <button onClick={()=>setShowSearch(!showSearch)} aria-label="Search resources" aria-expanded={showSearch} style={{background:"rgba(255,255,255,0.15)",border:"2px solid rgba(255,255,255,0.2)",borderRadius:14,width:44,height:44,fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}}><span aria-hidden="true">🔍</span></button>
         </div>
-        <h1 style={{margin:"4px 0 2px",color:"#fff",fontFamily:"'Baloo 2',sans-serif",fontSize:26,fontWeight:800,letterSpacing:-0.5,textShadow:"0 2px 10px rgba(0,0,0,0.2)"}}>Foster Family Hub</h1>
-        <p style={{margin:0,color:"rgba(255,255,255,0.75)",fontSize:13,fontWeight:600,letterSpacing:0.3}}>Illinois Resources — You're Not Alone 💜</p>
-
-        <button onClick={()=>setShowC(true)} style={{marginTop:12,display:"inline-flex",alignItems:"center",gap:7,background:"rgba(255,255,255,0.12)",border:"2px solid rgba(255,255,255,0.25)",borderRadius:22,padding:"8px 16px",cursor:"pointer",color:"#fff",fontFamily:"'Quicksand',sans-serif",fontSize:13,fontWeight:700,backdropFilter:"blur(4px)",transition:"all 0.2s"}}>
-          📍 {cl} <span style={{fontSize:10,opacity:0.7}}>▼</span>
-        </button>
-
-        {showS&&<div style={{marginTop:12,animation:"fadeSlide 0.3s ease"}}><input type="text" placeholder="Search anything..." value={q} onChange={e=>{setQ(e.target.value);if(e.target.value){setTab("home");setCat(null)}}} style={{width:"100%",padding:"12px 18px",borderRadius:18,border:"2px solid rgba(255,255,255,0.3)",background:"rgba(255,255,255,0.95)",fontFamily:"'Quicksand',sans-serif",fontSize:15,color:"#2D1B4E",outline:"none",boxShadow:"0 6px 20px rgba(0,0,0,0.15)"}} autoFocus/></div>}
+        <h1 style={{margin:"4px 0 2px",color:"#fff",fontFamily:"'Baloo 2',sans-serif",fontSize:26,fontWeight:800,letterSpacing:-0.5}}>Foster Family Hub</h1>
+        <p style={{margin:0,color:"rgba(255,255,255,0.75)",fontSize:13,fontWeight:600}}>Illinois Resources — You're Not Alone <span aria-hidden="true">💜</span></p>
+        <button onClick={()=>setShowCounty(true)} aria-label={`Select county: ${countyLabel}`} aria-haspopup="dialog" aria-expanded={showCounty} style={{marginTop:12,display:"inline-flex",alignItems:"center",gap:7,background:"rgba(255,255,255,0.12)",border:"2px solid rgba(255,255,255,0.25)",borderRadius:22,padding:"8px 16px",cursor:"pointer",color:"#fff",fontFamily:"'Quicksand',sans-serif",fontSize:13,fontWeight:700,backdropFilter:"blur(4px)"}}><span aria-hidden="true">📍</span> {countyLabel} <span aria-hidden="true" style={{fontSize:10,opacity:0.7}}>▼</span></button>
+        {showSearch&&<div style={{marginTop:12,animation:"fadeSlide 0.3s ease"}}><label htmlFor="main-search" className="sr-only">Search resources</label><input id="main-search" type="text" placeholder="Search anything..." value={searchQuery} onChange={e=>{setSearchQuery(e.target.value);if(e.target.value){setTab("home");setCat(null)}}} style={{width:"100%",padding:"12px 18px",borderRadius:18,border:"2px solid rgba(255,255,255,0.3)",background:"rgba(255,255,255,0.95)",fontFamily:"'Quicksand',sans-serif",fontSize:15,color:"#2D1B4E",outline:"none"}} autoFocus/></div>}
       </div>
-    </div>
+    </header>
 
-    {/* ═══ CONTENT ═══ */}
-    <div style={{paddingBottom:90,position:"relative"}}>
+    <main id="main-content" style={{paddingBottom:90,position:"relative"}}>
       <FloatingShapes/>
 
       {tab==="home"&&!cat&&<div style={{padding:"18px 18px",position:"relative",zIndex:1}}>
-        {/* Emergency banner */}
-        <AnimCard delay={0}><div style={{background:"linear-gradient(135deg,#FFF0E0,#FFE8CC)",border:"2.5px solid #F7B73155",borderRadius:20,padding:"13px 16px",marginBottom:18,display:"flex",alignItems:"center",gap:10,boxShadow:"0 4px 20px rgba(247,183,49,0.12)"}}>
-          <div style={{width:42,height:42,borderRadius:14,background:"linear-gradient(135deg,#F7B731,#e8a317)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,boxShadow:"0 3px 10px rgba(247,183,49,0.3)"}}>🚨</div>
-          <div><div style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:800,fontSize:13,color:"#B8650A"}}>Emergency? Call 911</div><div style={{fontFamily:"'Quicksand',sans-serif",fontSize:12,color:"#C77B2A",fontWeight:600}}>Report abuse: 1-800-252-2873 (24/7)</div></div>
+        <AnimCard delay={0}><div role="alert" style={{background:"linear-gradient(135deg,#FFF0E0,#FFE8CC)",border:"2.5px solid #F7B73155",borderRadius:20,padding:"13px 16px",marginBottom:18,display:"flex",alignItems:"center",gap:10}}>
+          <div aria-hidden="true" style={{width:42,height:42,borderRadius:14,background:"linear-gradient(135deg,#F7B731,#e8a317)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🚨</div>
+          <div><div style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:800,fontSize:13,color:"#B8650A"}}>Emergency? Call 911</div><div style={{fontFamily:"'Quicksand',sans-serif",fontSize:12,color:"#C77B2A",fontWeight:600}}>Report abuse: <a href="tel:18002522873" style={{color:"#B8650A",fontWeight:700}}>1-800-252-2873</a> (24/7)</div></div>
         </div></AnimCard>
 
-        {q?<div><h3 style={{margin:"0 0 12px",color:"#2D1B4E",fontFamily:"'Baloo 2',sans-serif",fontSize:17,fontWeight:800}}>Results for "{q}"</h3>{fr.length===0?<div style={{textAlign:"center",padding:40}}><div style={{fontSize:50,marginBottom:12,animation:"wiggle 1s ease-in-out infinite"}}>🔍</div><p style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:700,color:"#2D1B4E",fontSize:16}}>Nothing found</p><p style={{fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B"}}>Try different words or change your county</p></div>:fr.map((r,i)=><Item key={r.id} res={r} onClick={()=>setSel(r)} idx={i}/>)}</div>:<>
+        {searchQuery?<section aria-label="Search results"><h2 style={{margin:"0 0 12px",color:"#2D1B4E",fontFamily:"'Baloo 2',sans-serif",fontSize:17,fontWeight:800}}>Results for "{searchQuery}"</h2>
+          {filteredResources.length===0?<div role="status" style={{textAlign:"center",padding:40}}><div aria-hidden="true" style={{fontSize:50,marginBottom:12}}>🔍</div><p style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:700,color:"#2D1B4E"}}>Nothing found</p><p style={{fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B"}}>Try different words or change your county</p></div>:
+          <ul role="list" style={{listStyle:"none",padding:0,margin:0}}>{filteredResources.map((r,i)=><li key={r.id}><Item res={r} onClick={()=>setSel(r)} idx={i}/></li>)}</ul>}
+        </section>:<>
           {county!=="all"&&<AnimCard delay={1}><div style={{background:"linear-gradient(135deg,#EDE7F6,#E8E0F0)",borderRadius:18,padding:"11px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:10,border:"2px solid #D1C4E9"}}>
-            <div style={{width:36,height:36,borderRadius:12,background:"linear-gradient(135deg,#A55EEA,#8854d0)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,boxShadow:"0 3px 10px rgba(165,94,234,0.3)"}}>📍</div>
-            <div><div style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:800,fontSize:13,color:"#5E35B1"}}>{cl}</div><div style={{fontFamily:"'Quicksand',sans-serif",fontSize:11,color:"#7E57C2",fontWeight:600}}>Local + statewide resources</div></div>
-            <button onClick={()=>setCounty("all")} style={{marginLeft:"auto",background:"#D1C4E9",border:"none",borderRadius:10,padding:"5px 12px",fontSize:11,fontWeight:700,color:"#5E35B1",cursor:"pointer",fontFamily:"'Quicksand',sans-serif"}}>Clear</button>
+            <div aria-hidden="true" style={{width:36,height:36,borderRadius:12,background:"linear-gradient(135deg,#A55EEA,#8854d0)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>📍</div>
+            <div><div style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:800,fontSize:13,color:"#5E35B1"}}>{countyLabel}</div><div style={{fontFamily:"'Quicksand',sans-serif",fontSize:11,color:"#7E57C2",fontWeight:600}}>Local + statewide resources</div></div>
+            <button onClick={()=>setCounty("all")} aria-label="Clear county filter" style={{marginLeft:"auto",background:"#D1C4E9",border:"none",borderRadius:10,padding:"5px 12px",fontSize:11,fontWeight:700,color:"#5E35B1",cursor:"pointer",fontFamily:"'Quicksand',sans-serif"}}>Clear</button>
           </div></AnimCard>}
 
-          <h3 style={{margin:"0 0 14px",color:"#2D1B4E",fontFamily:"'Baloo 2',sans-serif",fontSize:18,fontWeight:800}}>What do you need? ✨</h3>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:24}}>
-            {CATEGORIES.map((c,i)=><AnimCard key={c.id} delay={i+2}>
-              <div className="cat-card" onClick={()=>setCat(c.id)} style={{background:"#FFFBF5",borderRadius:22,padding:"18px 14px",border:"2.5px solid #F0E4D8",textAlign:"center",cursor:"pointer",transition:"all 0.2s",position:"relative",overflow:"hidden",boxShadow:"0 3px 15px rgba(45,27,78,0.04)"}}>
-                <div style={{position:"absolute",top:-15,right:-15,width:50,height:50,borderRadius:"50%",background:`${c.color}0A`}}/>
-                <div style={{width:50,height:50,borderRadius:16,background:c.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,margin:"0 auto 8px",boxShadow:`0 4px 15px ${c.color}25`,position:"relative"}}>{c.icon}</div>
+          <section aria-label="Resource categories"><h2 style={{margin:"0 0 14px",color:"#2D1B4E",fontFamily:"'Baloo 2',sans-serif",fontSize:18,fontWeight:800}}>What do you need? <span aria-hidden="true">✨</span></h2>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:24}} role="list" aria-label="Resource categories">
+              {CATEGORIES.map((c,i)=><AnimCard key={c.id} delay={i+2}><button className="cat-btn" role="listitem" onClick={()=>{setCat(c.id);setAnnouncement(`Showing ${categoryCounts[c.id]} ${c.label} resources`)}} aria-label={`${c.label}: ${c.desc}. ${categoryCounts[c.id]} resources available.`} style={{width:"100%",background:"#FFFBF5",borderRadius:22,padding:"18px 14px",border:"2.5px solid #F0E4D8",textAlign:"center",cursor:"pointer",fontFamily:"inherit",position:"relative",overflow:"hidden"}}>
+                <div aria-hidden="true" style={{width:50,height:50,borderRadius:16,background:c.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,margin:"0 auto 8px",boxShadow:`0 4px 15px ${c.color}25`}}>{c.icon}</div>
                 <div style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:800,fontSize:13,color:"#2D1B4E",marginBottom:1}}>{c.label}</div>
                 <div style={{fontFamily:"'Quicksand',sans-serif",fontSize:10,color:"#8B7A6B",fontWeight:600,marginBottom:5}}>{c.desc}</div>
-                <span style={{display:"inline-block",background:c.bg,borderRadius:10,padding:"3px 10px",fontSize:10,fontWeight:700,color:"#fff",boxShadow:`0 2px 8px ${c.color}22`}}>{cc[c.id]}</span>
-              </div>
-            </AnimCard>)}
-          </div>
+                <span aria-label={`${categoryCounts[c.id]} resources`} style={{display:"inline-block",background:c.bg,borderRadius:10,padding:"3px 10px",fontSize:10,fontWeight:700,color:"#fff"}}>{categoryCounts[c.id]}</span>
+              </button></AnimCard>)}
+            </div>
+          </section>
 
-          <h3 style={{margin:"0 0 12px",color:"#2D1B4E",fontFamily:"'Baloo 2',sans-serif",fontSize:18,fontWeight:800}}>Quick Call 📱</h3>
-          <div style={{display:"flex",flexDirection:"column",gap:10}}>
-            {em.map((it,i)=><AnimCard key={i} delay={i+11}>
-              <a href={`tel:${it.n.replace(/-/g,"")}`} style={{background:"#FFFBF5",borderRadius:18,padding:"14px 16px",display:"flex",alignItems:"center",gap:12,textDecoration:"none",border:"2.5px solid #F0E4D8",boxShadow:"0 3px 15px rgba(45,27,78,0.04)"}}>
-                <div style={{width:44,height:44,borderRadius:14,background:it.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,boxShadow:"0 3px 12px rgba(0,0,0,0.1)"}}>{it.i}</div>
-                <div style={{flex:1}}><div style={{fontFamily:"'Quicksand',sans-serif",fontWeight:700,fontSize:12,color:"#8B7A6B"}}>{it.l}</div><div style={{fontFamily:"'Baloo 2',sans-serif",fontSize:17,color:"#2D1B4E",fontWeight:800}}>{it.n}</div></div>
-                <div style={{width:36,height:36,borderRadius:12,background:"linear-gradient(135deg,#26DE81,#20BF6B)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,boxShadow:"0 3px 10px rgba(32,191,107,0.25)"}}>📞</div>
-              </a>
-            </AnimCard>)}
-          </div>
+          <section aria-label="Emergency phone numbers"><h2 style={{margin:"0 0 12px",color:"#2D1B4E",fontFamily:"'Baloo 2',sans-serif",fontSize:18,fontWeight:800}}>Quick Call <span aria-hidden="true">📱</span></h2>
+            <ul role="list" style={{listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:10}}>
+              {emergencyNumbers.map((item,i)=><li key={i}><AnimCard delay={i+11}><a href={`tel:${item.number.replace(/[^0-9]/g,"")}`} aria-label={`Call ${item.label} at ${item.number}`} style={{background:"#FFFBF5",borderRadius:18,padding:"14px 16px",display:"flex",alignItems:"center",gap:12,textDecoration:"none",border:"2.5px solid #F0E4D8"}}>
+                <div aria-hidden="true" style={{width:44,height:44,borderRadius:14,background:item.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{item.icon}</div>
+                <div style={{flex:1}}><div style={{fontFamily:"'Quicksand',sans-serif",fontWeight:700,fontSize:12,color:"#8B7A6B"}}>{item.label}</div><div style={{fontFamily:"'Baloo 2',sans-serif",fontSize:17,color:"#2D1B4E",fontWeight:800}}>{item.number}</div></div>
+                <div aria-hidden="true" style={{width:36,height:36,borderRadius:12,background:"linear-gradient(135deg,#26DE81,#20BF6B)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>📞</div>
+              </a></AnimCard></li>)}
+            </ul>
+          </section>
         </>}
       </div>}
 
-      {/* ═══ CATEGORY DETAIL ═══ */}
-      {tab==="home"&&cat&&<div style={{padding:"16px 18px",position:"relative",zIndex:1}}>
-        <button onClick={()=>setCat(null)} style={{background:"linear-gradient(135deg,#FF6B6B22,#ee5a2422)",border:"2px solid #FF6B6B33",fontFamily:"'Baloo 2',sans-serif",fontSize:14,fontWeight:700,color:"#FF6B6B",cursor:"pointer",padding:"7px 14px",borderRadius:12,display:"flex",alignItems:"center",gap:5}}>← Back</button>
+      {tab==="home"&&cat&&<section aria-label={`${CATEGORIES.find(c=>c.id===cat)?.label} resources`} style={{padding:"16px 18px",position:"relative",zIndex:1}}>
+        <button onClick={()=>{setCat(null);setAnnouncement("Returned to categories")}} aria-label="Back to all categories" style={{background:"linear-gradient(135deg,#FF6B6B22,#ee5a2422)",border:"2px solid #FF6B6B33",fontFamily:"'Baloo 2',sans-serif",fontSize:14,fontWeight:700,color:"#FF6B6B",cursor:"pointer",padding:"7px 14px",borderRadius:12,display:"flex",alignItems:"center",gap:5}}><span aria-hidden="true">←</span> Back</button>
         <div style={{display:"flex",alignItems:"center",gap:12,margin:"12px 0 14px"}}>
-          <div style={{width:48,height:48,borderRadius:16,background:CATEGORIES.find(c=>c.id===cat)?.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,boxShadow:`0 4px 15px ${CATEGORIES.find(c=>c.id===cat)?.color}25`}}>{CATEGORIES.find(c=>c.id===cat)?.icon}</div>
-          <div><h2 style={{margin:0,fontFamily:"'Baloo 2',sans-serif",fontSize:20,fontWeight:800,color:"#2D1B4E"}}>{CATEGORIES.find(c=>c.id===cat)?.label}</h2>{county!=="all"&&<span style={{fontFamily:"'Quicksand',sans-serif",fontSize:12,color:"#5E35B1",fontWeight:700}}>📍 {cl}</span>}</div>
+          <div aria-hidden="true" style={{width:48,height:48,borderRadius:16,background:CATEGORIES.find(c=>c.id===cat)?.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{CATEGORIES.find(c=>c.id===cat)?.icon}</div>
+          <div><h2 style={{margin:0,fontFamily:"'Baloo 2',sans-serif",fontSize:20,fontWeight:800,color:"#2D1B4E"}}>{CATEGORIES.find(c=>c.id===cat)?.label}</h2>{county!=="all"&&<span style={{fontFamily:"'Quicksand',sans-serif",fontSize:12,color:"#5E35B1",fontWeight:700}}><span aria-hidden="true">📍</span> {countyLabel}</span>}</div>
         </div>
         {county!=="all"&&<div style={{display:"flex",gap:8,marginBottom:14}}>
-          <span style={{background:"linear-gradient(135deg,#A55EEA22,#8854d022)",borderRadius:10,padding:"4px 12px",fontSize:11,fontWeight:700,color:"#8854d0",border:"1.5px solid #A55EEA33"}}>📍 Local: {fr.filter(r=>!r.co.includes("statewide")).length}</span>
-          <span style={{background:"#F0E4D8",borderRadius:10,padding:"4px 12px",fontSize:11,fontWeight:700,color:"#8B7A6B"}}>🌍 Statewide: {fr.filter(r=>r.co.includes("statewide")).length}</span>
+          <span style={{background:"linear-gradient(135deg,#A55EEA22,#8854d022)",borderRadius:10,padding:"4px 12px",fontSize:11,fontWeight:700,color:"#8854d0",border:"1.5px solid #A55EEA33"}}><span aria-hidden="true">📍</span> Local: {filteredResources.filter(r=>!r.co.includes("statewide")).length}</span>
+          <span style={{background:"#F0E4D8",borderRadius:10,padding:"4px 12px",fontSize:11,fontWeight:700,color:"#8B7A6B"}}><span aria-hidden="true">🌍</span> Statewide: {filteredResources.filter(r=>r.co.includes("statewide")).length}</span>
         </div>}
-        {fr.length===0?<div style={{textAlign:"center",padding:40}}><div style={{fontSize:50,marginBottom:12,animation:"wiggle 1s ease-in-out infinite"}}>📭</div><p style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:700,color:"#2D1B4E"}}>No resources here</p><p style={{fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B"}}>Try a different county</p></div>:<>
-          {county!=="all"&&fr.filter(r=>!r.co.includes("statewide")).length>0&&<div style={{marginBottom:16}}><div style={{fontFamily:"'Baloo 2',sans-serif",fontSize:14,fontWeight:800,color:"#5E35B1",marginBottom:8}}>📍 Local to {cl}</div>{fr.filter(r=>!r.co.includes("statewide")).map((r,i)=><Item key={r.id} res={r} onClick={()=>setSel(r)} idx={i}/>)}</div>}
-          {county!=="all"&&fr.filter(r=>r.co.includes("statewide")).length>0&&<div><div style={{fontFamily:"'Baloo 2',sans-serif",fontSize:14,fontWeight:800,color:"#8B7A6B",marginBottom:8}}>🌍 Available Statewide</div>{fr.filter(r=>r.co.includes("statewide")).map((r,i)=><Item key={r.id} res={r} onClick={()=>setSel(r)} idx={i}/>)}</div>}
-          {county==="all"&&fr.map((r,i)=><Item key={r.id} res={r} onClick={()=>setSel(r)} idx={i}/>)}
+        {filteredResources.length===0?<div role="status" style={{textAlign:"center",padding:40}}><div aria-hidden="true" style={{fontSize:50,marginBottom:12}}>📭</div><p style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:700,color:"#2D1B4E"}}>No resources here</p><p style={{fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B"}}>Try a different county</p></div>:<>
+          {county!=="all"&&filteredResources.filter(r=>!r.co.includes("statewide")).length>0&&<div style={{marginBottom:16}}><div style={{fontFamily:"'Baloo 2',sans-serif",fontSize:14,fontWeight:800,color:"#5E35B1",marginBottom:8}}><span aria-hidden="true">📍</span> Local to {countyLabel}</div><ul role="list" style={{listStyle:"none",padding:0,margin:0}}>{filteredResources.filter(r=>!r.co.includes("statewide")).map((r,i)=><li key={r.id}><Item res={r} onClick={()=>setSel(r)} idx={i}/></li>)}</ul></div>}
+          {county!=="all"&&filteredResources.filter(r=>r.co.includes("statewide")).length>0&&<div><div style={{fontFamily:"'Baloo 2',sans-serif",fontSize:14,fontWeight:800,color:"#8B7A6B",marginBottom:8}}><span aria-hidden="true">🌍</span> Available Statewide</div><ul role="list" style={{listStyle:"none",padding:0,margin:0}}>{filteredResources.filter(r=>r.co.includes("statewide")).map((r,i)=><li key={r.id}><Item res={r} onClick={()=>setSel(r)} idx={i}/></li>)}</ul></div>}
+          {county==="all"&&<ul role="list" style={{listStyle:"none",padding:0,margin:0}}>{filteredResources.map((r,i)=><li key={r.id}><Item res={r} onClick={()=>setSel(r)} idx={i}/></li>)}</ul>}
         </>}
-      </div>}
+      </section>}
 
-      {/* ═══ EVENTS TAB ═══ */}
-      {tab==="events"&&<div style={{padding:"20px 18px",paddingBottom:100,position:"relative",zIndex:1}}>
-        <h2 style={{margin:"0 0 4px",fontFamily:"'Baloo 2',sans-serif",fontSize:22,fontWeight:800,color:"#2D1B4E"}}>Upcoming Events 📅</h2>
-        <p style={{margin:"0 0 6px",fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B",fontWeight:600}}>
-          {county==="all"?"Events across all of Illinois":"Events for "+cl+" & statewide"} • Next 2 months
-        </p>
-        <div style={{display:"inline-flex",alignItems:"center",gap:6,background:"linear-gradient(135deg,#26DE8118,#20BF6B18)",border:"1.5px solid #26DE8133",borderRadius:10,padding:"4px 10px",marginBottom:16}}>
-          <div style={{width:7,height:7,borderRadius:"50%",background:"#26DE81",animation:"pulse 2s ease infinite"}}/>
-          <span style={{fontFamily:"'Quicksand',sans-serif",fontSize:10,fontWeight:700,color:"#20BF6B"}}>Auto-updating • Always current</span>
-        </div>
-
-        {filteredEvents.length===0?<div style={{textAlign:"center",padding:40}}><div style={{fontSize:50,marginBottom:12,animation:"wiggle 1s ease-in-out infinite"}}>📅</div><p style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:700,color:"#2D1B4E"}}>No upcoming events</p><p style={{fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B"}}>Try selecting a different county or check back soon</p></div>:
+      {tab==="events"&&<section aria-label="Upcoming events" style={{padding:"20px 18px",paddingBottom:100,position:"relative",zIndex:1}}>
+        <h2 style={{margin:"0 0 4px",fontFamily:"'Baloo 2',sans-serif",fontSize:22,fontWeight:800,color:"#2D1B4E"}}>Upcoming Events <span aria-hidden="true">📅</span></h2>
+        <p style={{margin:"0 0 16px",fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B",fontWeight:600}}>{county==="all"?"Events across all of Illinois":"Events for "+countyLabel+" & statewide"} • Next 2 months</p>
+        {filteredEvents.length===0?<div role="status" style={{textAlign:"center",padding:40}}><div aria-hidden="true" style={{fontSize:50,marginBottom:12}}>📅</div><p style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:700,color:"#2D1B4E"}}>No upcoming events</p><p style={{fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B"}}>Try a different county or check back soon</p></div>:
         <>
-          {/* Group by month */}
-          {[...new Set(filteredEvents.map(ev=>{const d=new Date(ev.date+"T12:00:00");return d.toLocaleString("en-US",{month:"long",year:"numeric"})}))].map((monthLabel,mi)=>{
+          {[...new Set(filteredEvents.map(ev=>{const d=new Date(ev.date+"T12:00:00");return d.toLocaleString("en-US",{month:"long",year:"numeric"})}))].map(monthLabel=>{
             const monthEvents=filteredEvents.filter(ev=>{const d=new Date(ev.date+"T12:00:00");return d.toLocaleString("en-US",{month:"long",year:"numeric"})===monthLabel});
             return <div key={monthLabel} style={{marginBottom:20}}>
-              <div style={{fontFamily:"'Baloo 2',sans-serif",fontSize:16,fontWeight:800,color:"#5E35B1",marginBottom:10,display:"flex",alignItems:"center",gap:8}}>
-                <div style={{width:6,height:6,borderRadius:"50%",background:"#A55EEA"}}/>
-                {monthLabel}
-                <span style={{fontFamily:"'Quicksand',sans-serif",fontSize:11,fontWeight:600,color:"#8B7A6B",marginLeft:4}}>({monthEvents.length})</span>
-              </div>
-              {monthEvents.map((ev,i)=><EventItem key={ev.id} ev={ev} onClick={()=>setSelEv(ev)} idx={i}/>)}
+              <div style={{fontFamily:"'Baloo 2',sans-serif",fontSize:16,fontWeight:800,color:"#5E35B1",marginBottom:10,display:"flex",alignItems:"center",gap:8}}><div aria-hidden="true" style={{width:6,height:6,borderRadius:"50%",background:"#A55EEA"}}/>{monthLabel}<span style={{fontFamily:"'Quicksand',sans-serif",fontSize:11,fontWeight:600,color:"#8B7A6B",marginLeft:4}}>({monthEvents.length})</span></div>
+              <ul role="list" style={{listStyle:"none",padding:0,margin:0}}>{monthEvents.map((ev,i)=><li key={ev.id}><EventItem ev={ev} onClick={()=>setSelEv(ev)} idx={i}/></li>)}</ul>
             </div>
           })}
         </>}
-      </div>}
+      </section>}
 
-      {/* ═══ HELPLINES ═══ */}
-      {tab==="help"&&<div style={{padding:"20px 18px",paddingBottom:100,position:"relative",zIndex:1}}>
-        <h2 style={{margin:"0 0 4px",fontFamily:"'Baloo 2',sans-serif",fontSize:22,fontWeight:800,color:"#2D1B4E"}}>Important Numbers 📞</h2>
+      {tab==="help"&&<section aria-label="Important phone numbers" style={{padding:"20px 18px",paddingBottom:100,position:"relative",zIndex:1}}>
+        <h2 style={{margin:"0 0 4px",fontFamily:"'Baloo 2',sans-serif",fontSize:22,fontWeight:800,color:"#2D1B4E"}}>Important Numbers <span aria-hidden="true">📞</span></h2>
         <p style={{margin:"0 0 18px",fontFamily:"'Quicksand',sans-serif",fontSize:13,color:"#8B7A6B",fontWeight:600}}>Tap to call directly — help is one tap away</p>
+        <ul role="list" style={{listStyle:"none",padding:0,margin:0}}>
         {[
-          {i:"🚨",t:"Report Child Abuse/Neglect",n:"1-800-252-2873",s:"24/7 DCFS Hotline",bg:"linear-gradient(135deg,#FF6B6B,#ee5a24)"},
-          {i:"📞",t:"Foster Parent Helpline",n:"866-368-5204",s:"DCFS trained staff",bg:"linear-gradient(135deg,#20BF6B,#0fb85e)"},
-          {i:"🤝",t:"DCFS Advocacy Office",n:"800-232-3798",s:"Navigate the system",bg:"linear-gradient(135deg,#4B7BEC,#3867d6)"},
-          {i:"🏛️",t:"DCFS General Inquiries",n:"312-814-6800",s:"Main office line",bg:"linear-gradient(135deg,#F7B731,#e8a317)"},
-          {i:"💙",t:"988 Crisis Lifeline",n:"988",s:"24/7 mental health",bg:"linear-gradient(135deg,#A55EEA,#8854d0)"},
-          {i:"🆘",t:"CARES Crisis Hotline",n:"800-349-9049",s:"Youth mental health",bg:"linear-gradient(135deg,#FC5C65,#eb3b5a)"},
-          {i:"👶",t:"Fussy Baby Network",n:"888-431-2229",s:"Infant specialists",bg:"linear-gradient(135deg,#26DE81,#0fb966)"},
-          {i:"👨‍👩‍👧‍👦",t:"Metropolitan Family Services",n:"312-655-8357",s:"Post-adoption (Cook)",bg:"linear-gradient(135deg,#4B7BEC,#3867d6)"},
-          {i:"🏠",t:"Mimi's House (Lake Co.)",n:"847-242-1126",s:"Foster family advocacy",bg:"linear-gradient(135deg,#F7B731,#e8a317)"},
-          {i:"📚",t:"DCFS Life Skills",n:"217-557-2689",s:"Youth ages 14–20",bg:"linear-gradient(135deg,#A55EEA,#8854d0)"},
-        ].map((it,i)=><AnimCard key={i} delay={i}><a href={`tel:${it.n.replace(/-/g,"")}`} style={{display:"block",background:"#FFFBF5",border:"2.5px solid #F0E4D8",borderRadius:22,padding:"16px 18px",marginBottom:12,textDecoration:"none",boxShadow:"0 3px 15px rgba(45,27,78,0.04)"}}>
+          {icon:"🚨",title:"Report Child Abuse/Neglect",number:"1-800-252-2873",subtitle:"24/7 DCFS Hotline",bg:"linear-gradient(135deg,#FF6B6B,#ee5a24)"},
+          {icon:"📞",title:"Foster Parent Helpline",number:"866-368-5204",subtitle:"DCFS trained staff",bg:"linear-gradient(135deg,#20BF6B,#0fb85e)"},
+          {icon:"🤝",title:"DCFS Advocacy Office",number:"800-232-3798",subtitle:"Navigate the system",bg:"linear-gradient(135deg,#4B7BEC,#3867d6)"},
+          {icon:"🏛️",title:"DCFS General Inquiries",number:"312-814-6800",subtitle:"Main office line",bg:"linear-gradient(135deg,#F7B731,#e8a317)"},
+          {icon:"💙",title:"988 Crisis Lifeline",number:"988",subtitle:"24/7 mental health",bg:"linear-gradient(135deg,#A55EEA,#8854d0)"},
+          {icon:"🆘",title:"CARES Crisis Hotline",number:"800-349-9049",subtitle:"Youth mental health",bg:"linear-gradient(135deg,#FC5C65,#eb3b5a)"},
+          {icon:"👶",title:"Fussy Baby Network",number:"888-431-2229",subtitle:"Infant specialists",bg:"linear-gradient(135deg,#26DE81,#0fb966)"},
+          {icon:"👨‍👩‍👧‍👦",title:"Metropolitan Family Services",number:"312-655-8357",subtitle:"Post-adoption (Cook)",bg:"linear-gradient(135deg,#4B7BEC,#3867d6)"},
+          {icon:"🏠",title:"Mimi's House (Lake Co.)",number:"847-242-1126",subtitle:"Foster family advocacy",bg:"linear-gradient(135deg,#F7B731,#e8a317)"},
+          {icon:"📚",title:"DCFS Life Skills",number:"217-557-2689",subtitle:"Youth ages 14–20",bg:"linear-gradient(135deg,#A55EEA,#8854d0)"},
+        ].map((item,i)=><li key={i}><AnimCard delay={i}><a href={`tel:${item.number.replace(/[^0-9]/g,"")}`} aria-label={`Call ${item.title} at ${item.number}. ${item.subtitle}`} style={{display:"block",background:"#FFFBF5",border:"2.5px solid #F0E4D8",borderRadius:22,padding:"16px 18px",marginBottom:12,textDecoration:"none"}}>
           <div style={{display:"flex",alignItems:"center",gap:14}}>
-            <div style={{width:50,height:50,borderRadius:16,background:it.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,boxShadow:"0 4px 15px rgba(0,0,0,0.1)",flexShrink:0}}>{it.i}</div>
-            <div style={{flex:1}}><div style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:800,fontSize:14,color:"#2D1B4E"}}>{it.t}</div><div style={{fontFamily:"'Baloo 2',sans-serif",fontSize:22,fontWeight:800,color:"#2D1B4E",margin:"1px 0"}}>{it.n}</div><div style={{fontFamily:"'Quicksand',sans-serif",fontSize:12,fontWeight:600,color:"#8B7A6B"}}>{it.s}</div></div>
-            <div style={{width:42,height:42,borderRadius:14,background:"linear-gradient(135deg,#26DE81,#20BF6B)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,boxShadow:"0 3px 10px rgba(32,191,107,0.25)",flexShrink:0}}>📞</div>
+            <div aria-hidden="true" style={{width:50,height:50,borderRadius:16,background:item.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{item.icon}</div>
+            <div style={{flex:1}}><div style={{fontFamily:"'Baloo 2',sans-serif",fontWeight:800,fontSize:14,color:"#2D1B4E"}}>{item.title}</div><div style={{fontFamily:"'Baloo 2',sans-serif",fontSize:22,fontWeight:800,color:"#2D1B4E",margin:"1px 0"}}>{item.number}</div><div style={{fontFamily:"'Quicksand',sans-serif",fontSize:12,fontWeight:600,color:"#8B7A6B"}}>{item.subtitle}</div></div>
+            <div aria-hidden="true" style={{width:44,height:44,borderRadius:14,background:"linear-gradient(135deg,#26DE81,#20BF6B)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>📞</div>
           </div>
-        </a></AnimCard>)}
-      </div>}
-    </div>
+        </a></AnimCard></li>)}
+        </ul>
+      </section>}
+    </main>
 
-    {/* ═══ BOTTOM NAV ═══ */}
-    <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:480,background:"rgba(255,251,245,0.92)",backdropFilter:"blur(20px)",borderTop:"2px solid #F0E4D8",display:"flex",justifyContent:"space-around",padding:"6px 0 14px",zIndex:50}}>
-      {[{id:"home",ic:"🏠",l:"Home"},{id:"events",ic:"📅",l:"Events"},{id:"help",ic:"📞",l:"Helplines"}].map(t=><button key={t.id} className="nav-btn" onClick={()=>{setTab(t.id);setCat(null);setQ("");setShowS(false)}} style={{background: tab===t.id?"linear-gradient(135deg,#FF6B6B15,#F7B73115)":"none",border:tab===t.id?"2px solid #FF6B6B22":"2px solid transparent",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,padding:"8px 22px",borderRadius:16,transition:"all 0.2s"}}>
-        <span style={{fontSize:24,filter:tab===t.id?"none":"grayscale(0.5)",opacity:tab===t.id?1:0.5,transition:"all 0.2s"}}>{t.ic}</span>
-        <span style={{fontSize:11,fontWeight:tab===t.id?800:600,color:tab===t.id?"#FF6B6B":"#8B7A6B",fontFamily:"'Baloo 2',sans-serif"}}>{t.l}</span>
+    <nav aria-label="Main navigation" style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:480,background:"rgba(255,251,245,0.92)",backdropFilter:"blur(20px)",borderTop:"2px solid #F0E4D8",display:"flex",justifyContent:"space-around",padding:"6px 0 14px",zIndex:50}}>
+      {[{id:"home",icon:"🏠",label:"Home"},{id:"events",icon:"📅",label:"Events"},{id:"help",icon:"📞",label:"Helplines"}].map(navItem=><button key={navItem.id} className="nav-btn" onClick={()=>{setTab(navItem.id);setCat(null);setSearchQuery("");setShowSearch(false);setAnnouncement(`Navigated to ${navItem.label}`)}} aria-label={navItem.label} aria-current={tab===navItem.id?"page":undefined} style={{background:tab===navItem.id?"linear-gradient(135deg,#FF6B6B15,#F7B73115)":"none",border:tab===navItem.id?"2px solid #FF6B6B22":"2px solid transparent",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,padding:"10px 24px",minHeight:44,borderRadius:16}}>
+        <span aria-hidden="true" style={{fontSize:24,filter:tab===navItem.id?"none":"grayscale(0.5)",opacity:tab===navItem.id?1:0.5}}>{navItem.icon}</span>
+        <span style={{fontSize:11,fontWeight:tab===navItem.id?800:600,color:tab===navItem.id?"#FF6B6B":"#8B7A6B",fontFamily:"'Baloo 2',sans-serif"}}>{navItem.label}</span>
       </button>)}
-    </div>
+    </nav>
 
-    {showC&&<CountyPicker sel={county} onSel={setCounty} onClose={()=>setShowC(false)}/>}
+    {showCounty&&<CountyPicker sel={county} onSel={setCounty} onClose={()=>setShowCounty(false)}/>}
     {sel&&<Sheet res={sel} onClose={()=>setSel(null)}/>}
     {selEv&&<EventSheet ev={selEv} onClose={()=>setSelEv(null)}/>}
   </div>);
@@ -832,44 +603,10 @@ function App(){
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(React.createElement(App));
   </script>
-
-  <!-- Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js').then(function(registration) {
-          console.log('SW registered, scope:', registration.scope);
-
-          // Check for updates immediately on load
-          registration.update();
-
-          // Check for updates every 60 seconds while the app is open
-          setInterval(function() {
-            registration.update();
-          }, 60000);
-
-          // When a new service worker is found and installed, prompt refresh
-          registration.addEventListener('updatefound', function() {
-            var newWorker = registration.installing;
-            newWorker.addEventListener('statechange', function() {
-              if (newWorker.state === 'activated') {
-                // New version available — auto-refresh
-                window.location.reload();
-              }
-            });
-          });
-        }).catch(function(err) {
-          console.log('SW registration failed:', err);
-        });
-
-        // If a new SW takes over, refresh the page
-        var refreshing = false;
-        navigator.serviceWorker.addEventListener('controllerchange', function() {
-          if (!refreshing) {
-            refreshing = true;
-            window.location.reload();
-          }
-        });
+        navigator.serviceWorker.register('sw.js').then(function(reg) { reg.update(); setInterval(function() { reg.update(); }, 60000); }).catch(function() {});
       });
     }
   </script>
